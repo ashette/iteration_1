@@ -1,0 +1,104 @@
+@import "~vuetify/src/styles/styles.sass";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$body-font-family: 'Roboto', sans-serif;
+
+$heading-font-family: $body-font-family, sans-serif;
+
+@each $heading, $style in $headings {
+  $headings: map-merge(
+    $headings,
+    (
+      $heading:
+        map-merge(
+          $style,
+          (
+            "font-family": $heading-font-family,
+          )
+        ),
+    )
+  );
+}
+
+.main-menu-drawer {
+  &__container {
+    padding-left: 64px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .v-navigation-drawer__content {
+    display: flex;
+  }
+
+  .v-list-item {
+    min-height: 50px;
+
+    &:before {
+      background-color: transparent;
+    }
+
+    &__title {
+      font-size: 32px;
+    }
+  }
+
+  .v-list-item--link {
+    transition: $primary-transition;
+
+    &:not(.v-list-item--disabled):hover {
+      color: var(--v-primary-base);
+
+      .v-icon {
+        color: var(--v-primary-base);
+        fill: var(--v-primary-base);
+      }
+    }
+  }
+
+  .v-icon {
+    color: map-get($shades, "white");
+    fill: map-get($shades, "white");
+  }
+}
+
+.main-menu-drawer-items {
+  margin: auto;
+  width: 100%;
+}
+
+.social-links {
+  .v-list-item {
+    flex: 0 0 auto;
+    padding: 0 12px;
+  }
+}
+
+.v-btn {
+  text-transform: initial;
+  transition-property: box-shadow, transform, opacity, border-color, color;
+
+  &.v-size--default {
+    width: 48px;
+    height: 48px;
+    font-size: 13px;
+  }
+}
+
+.v-btn--fab {
+  &.v-btn--outlined {
+    border-color: transparent;
+
+    &:before {
+      background-color: transparent;
+    }
+  }
+
+  .theme--dark &:hover.v-btn--outlined {
+    border-color: map-get($shades, "white");
+  }
+
+  .theme--dark &:hover:not(:active).v-btn--outlined {
+    color: map-get($shades, "white") !important;
+  }
+}
