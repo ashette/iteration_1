@@ -1,13 +1,14 @@
  <template>
-  <v-layout fill-height>
+  <div>
     <v-navigation-drawer
       permanent
-      absolute
       dark
       mini-variant
-      mini-variant-width="64px"
-      class="py-8"
+      :mini-variant-width="miniNavWidth"
+      class="main-menu-mini-drawer py-5"
       color="menu_background"
+      app
+      fixed
     >
       <v-row class="justify-center fill-height" no-gutters>
         <v-btn class="px-3 py-3" @click.stop="drawer = !drawer" icon>
@@ -15,11 +16,11 @@
         </v-btn>
 
         <v-btn
-          class="p-1 align-self-end font-weight-bold"
+          class="lang-btn p-1 align-self-end font-weight-bold"
           fab
           outlined
-          :ripple="false"
           color="primary"
+          x-small
         >
           <span>Eng</span>
         </v-btn>
@@ -29,10 +30,10 @@
     <v-navigation-drawer
       class="main-menu-drawer py-8 d-flex"
       v-model="drawer"
-      absolute
+      fixed
       temporary
       dark
-      width="50%"
+      :width="navwidth"
       color="menu_background"
     >
       <v-btn
@@ -44,17 +45,18 @@
         <v-icon>$vuetify.icons.close</v-icon>
       </v-btn>
 
-      <div class="main-menu-drawer__container my-auto">
+      <div class="main-menu-drawer__container pl-2 pl-sm-8 mt-12 my-sm-auto">
         <v-list
           class="main-menu-drawer-items py-0 d-flex flex-column text-uppercase"
         >
           <v-list-item
             v-for="item in menuItems"
             :key="item.name"
-            :ripple="false"
             :to="item.href"
           >
-            <v-list-item-title v-text="item.name"></v-list-item-title>
+            <v-list-item-title
+              v-text="item.name"
+            ></v-list-item-title>
           </v-list-item>
         </v-list>
 
@@ -62,7 +64,6 @@
           <v-list-item
             v-for="item in socialLinks"
             :key="item.name"
-            :ripple="false"
             :to="item.href"
           >
             <v-icon size="32">$vuetify.icons.{{ item.name }}</v-icon>
@@ -70,7 +71,7 @@
         </v-list>
       </div>
     </v-navigation-drawer>
-  </v-layout>
+  </div>
 </template>
 
 <script>
@@ -110,5 +111,35 @@ export default {
       },
     ],
   }),
+  computed: {
+    miniNavWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "85px";
+        case "sm":
+          return "85px";
+        case "md":
+          return "85px";
+        case "lg":
+          return "64px";
+        default:
+          return "64px";
+      }
+    },
+    navwidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "100%";
+        case "sm":
+          return "100%";
+        case "md":
+          return "60%";
+        case "lg":
+          return "50%";
+        default:
+          return "50%";
+      }
+    },
+  },
 };
 </script>
