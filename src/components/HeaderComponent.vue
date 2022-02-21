@@ -1,8 +1,14 @@
 <template>
-  <v-app-bar id="app-bar" color="white" class="px-sm-8 px-lg-12" flat  absolute app height="110">
-    <v-container class="py-7 py-sm-8">
-      <v-row>
-        <v-col class="col-12 py-0 col-sm-auto text-right text-sm-left">
+  <v-app-bar
+    id="app-bar"
+    color="white"
+    class="px-sm-6 px-lg-12"
+    flat
+    height="110"
+  >
+    <v-container class="py-4 px-4 py-sm-8">
+      <v-row no-gutters>
+        <v-col class="py-0 col-12 col-sm-auto text-right text-sm-left">
           <v-toolbar-title
             class="logo font-weight-bold primary--text"
             v-text="appName"

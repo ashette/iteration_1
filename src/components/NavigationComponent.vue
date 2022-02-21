@@ -1,14 +1,21 @@
  <template>
   <div>
+    <v-app-bar-nav-icon
+      class="mobile-menu-opener mt-2 ml-2 px-3 py-3 d-sm-none menu--text"
+      @click.stop="drawer = !drawer"
+      absolute
+    >
+      <v-icon>$vuetify.icons.menu</v-icon>
+    </v-app-bar-nav-icon>
     <v-navigation-drawer
-      permanent
       dark
       mini-variant
       :mini-variant-width="miniNavWidth"
       class="main-menu-mini-drawer py-5"
-      color="menu_background"
+      color="menu"
+      mobile-breakpoint="768"
       app
-      fixed
+      :fixed="$vuetify.breakpoint.mobile"
     >
       <v-row class="justify-center fill-height" no-gutters>
         <v-btn class="px-3 py-3" @click.stop="drawer = !drawer" icon>
@@ -28,13 +35,17 @@
     </v-navigation-drawer>
 
     <v-navigation-drawer
-      class="main-menu-drawer py-8 d-flex"
+      class="main-menu-drawer py-5 d-flex"
       v-model="drawer"
       fixed
       temporary
       dark
-      :width="navwidth"
-      color="menu_background"
+      :width="
+        navwidth < 100 ? `calc(${navwidth}% + ${miniNavWidth / 2}px` : `${navwidth}%`
+      "
+      color="menu"
+      overlay-color="menu"
+      overlay-opacity="0.8"
     >
       <v-btn
         class="px-3 py-3 ml-2"
@@ -54,9 +65,7 @@
             :key="item.name"
             :to="item.href"
           >
-            <v-list-item-title
-              v-text="item.name"
-            ></v-list-item-title>
+            <v-list-item-title v-text="item.name"></v-list-item-title>
           </v-list-item>
         </v-list>
 
@@ -113,31 +122,19 @@ export default {
   }),
   computed: {
     miniNavWidth() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-          return "85px";
-        case "sm":
-          return "85px";
-        case "md":
-          return "85px";
-        case "lg":
-          return "64px";
-        default:
-          return "64px";
+      if (this.$vuetify.breakpoint.smAndDown) {
+        return 85;
+      } else {
+        return 64;
       }
     },
     navwidth() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-          return "100%";
-        case "sm":
-          return "100%";
-        case "md":
-          return "60%";
-        case "lg":
-          return "50%";
-        default:
-          return "50%";
+      if (this.$vuetify.breakpoint.smAndDown) {
+        return 100;
+      } else if (this.$vuetify.breakpoint.md) {
+        return 60;
+      } else {
+        return 50;
       }
     },
   },

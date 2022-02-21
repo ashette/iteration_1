@@ -31,9 +31,9 @@ export default new Vuetify({
                 secondary: '#7B0C3B',
                 tertiary: '#999999',
                 background: '#FFFFFF',
-                background_disabled: '#EEEEEE',
+                disabled: '#EEEEEE',
                 font: '#121212',                
-                menu_background: '#151B1F'
+                menu: '#151B1F'
             }
         },
         options: {
@@ -46,7 +46,7 @@ export default new Vuetify({
     },
     breakpoint: {
         thresholds: {
-          xs: 720,
+          xs: 768,
           sm: 1024,
           md: 1440,
           lg: 1920,

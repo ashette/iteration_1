@@ -21,7 +21,7 @@ $headings: (
   "h2": (
     "size": 32px,
     "weight": 700,
-    "line-height": 1,
+    "line-height": normal,
   ),
   "subtitle-1": (
     "size": 26px,
@@ -69,6 +69,8 @@ $fab-sizes: (
   "large": 64,
   "x-large": 72,
 );
+
+$navigation-drawer-border-width: 0;
 
 $ripple-animation-transition-in: none;
 $ripple-animation-transition-out: none;

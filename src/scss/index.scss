@@ -82,8 +82,8 @@
     color: var(--v-tertiary-base);
 
     .v-icon {
-      color: var(--v-tertiary-base);
-      fill: var(--v-tertiary-base);
+      color: currentColor;
+      fill: currentColor;
     }
   }
 
@@ -135,14 +135,15 @@
     color: var(--v-primary-base);
 
     .v-icon {
-      color: var(--v-primary-base);
-      fill: var(--v-primary-base);
+      color: currentColor;
+      fill: currentColor;
     }
   }
 }
 
 .logo {
   font-size: 30px;
+  line-height: normal;
 }
 
 .v-toolbar {
@@ -154,4 +155,24 @@
 
 .v-footer {
   font-size: 13px;
+
+  &.theme--dark {
+    background-color: var(--v-menu-base) !important;
+
+    .copyright {
+      color: var(--v-disabled-base) !important;
+    }
+  }
+}
+
+.mobile-menu-opener {
+  z-index: 1;
+}
+
+@media #{map-get($display-breakpoints, 'xs-only')} {
+  .btn-reserve {
+    border-radius: 0;
+    width: calc(100% + 32px);
+    margin-left: -16px;
+  }
 }

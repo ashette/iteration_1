@@ -1,31 +1,14 @@
 <template>
   <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
+    width="28"
+    height="20"
+    viewBox="0 0 28 20"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M4 16H28"
-      stroke="white"
-      stroke-width="3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M4 8H28"
-      stroke="white"
-      stroke-width="3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M4 24H28"
-      stroke="white"
-      stroke-width="3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M0.5 2C0.5 1.17157 1.17157 0.5 2 0.5H26C26.8284 0.5 27.5 1.17157 27.5 2C27.5 2.82843 26.8284 3.5 26 3.5H2C1.17157 3.5 0.5 2.82843 0.5 2ZM0.5 10C0.5 9.17157 1.17157 8.5 2 8.5H26C26.8284 8.5 27.5 9.17157 27.5 10C27.5 10.8284 26.8284 11.5 26 11.5H2C1.17157 11.5 0.5 10.8284 0.5 10ZM0.5 18C0.5 17.1716 1.17157 16.5 2 16.5H26C26.8284 16.5 27.5 17.1716 27.5 18C27.5 18.8284 26.8284 19.5 26 19.5H2C1.17157 19.5 0.5 18.8284 0.5 18Z"
     />
   </svg>
 </template>
