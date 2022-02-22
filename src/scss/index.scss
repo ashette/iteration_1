@@ -122,6 +122,10 @@
   .theme--dark &:hover:not(:active).v-btn--outlined {
     color: map-get($shades, "white") !important;
   }
+
+  &.v-size--x-small.v-btn--absolute.v-btn--bottom {
+    bottom: 16px;
+  }
 }
 
 .v-btn--text {

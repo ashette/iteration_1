@@ -78,6 +78,17 @@
             <v-icon size="32">$vuetify.icons.{{ item.name }}</v-icon>
           </v-list-item>
         </v-list>
+        <v-btn
+          class="lang-btn p-1 align-self-end font-weight-bold d-block d-sm-none ml-2"
+          absolute
+          bottom
+          fab
+          outlined
+          color="primary"
+          x-small
+        >
+          <span>Eng</span>
+        </v-btn>
       </div>
     </v-navigation-drawer>
   </div>
