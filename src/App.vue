@@ -15,11 +15,7 @@ export default {
 
   components: {
     NavigationComponent,
-  },
-
-  data: () => ({
-    appName: "Need for drive",
-  }),
+  }
 };
 </script>
 

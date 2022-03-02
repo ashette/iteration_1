@@ -28,9 +28,6 @@ export default {
   props: {
     appName: String,
   },
-  components: { LocationSelector },
-  data: () => ({
-    //
-  }),
+  components: { LocationSelector }
 };
 </script>

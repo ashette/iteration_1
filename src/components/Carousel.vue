@@ -11,8 +11,8 @@
       >
     </template>
     <v-carousel-item
-      v-for="(slider, i) in sliders"
-      :key="i"
+      v-for="slider in sliders"
+      :key="slider.id"
       :src="slider.image"
     >
       <template>
@@ -62,6 +62,7 @@ export default {
     model: 0,
     sliders: [
       {
+        id: 1,
         title: "Бесплатная парковка",
         subtitle:
           "Оставляйте машину на платных городских парковках и разрешенных местах, не нарушая ПДД, а также в аэропортах.",
@@ -69,18 +70,21 @@ export default {
         color: "green",
       },
       {
+        id: 2,
         title: "Страховка",
         subtitle: "Полная страховка страховка автомобиля",
         image: require("@/assets/slider_2.jpg"),
         color: "teal",
       },
       {
+        id: 3,
         title: "Бензин",
         subtitle: "Полный бак на любой заправке города за наш счёт",
         image: require("@/assets/slider_3.jpg"),
         color: "bordo",
       },
       {
+        id: 4,
         title: "Обслуживание",
         subtitle: "Автомобиль проходит еженедельное ТО",
         image: require("@/assets/slider_4.jpg"),
