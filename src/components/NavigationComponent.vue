@@ -19,7 +19,7 @@
     >
       <v-row class="justify-center fill-height" no-gutters>
         <v-btn class="px-3 py-3" @click.stop="drawer = !drawer" icon>
-          <v-icon>$vuetify.icons.menu</v-icon>
+          <v-icon size="32">$vuetify.icons.menu</v-icon>
         </v-btn>
 
         <v-btn
@@ -53,7 +53,7 @@
         @click.stop="drawer = !drawer"
         icon
       >
-        <v-icon>$vuetify.icons.close</v-icon>
+        <v-icon size="32">$vuetify.icons.close</v-icon>
       </v-btn>
 
       <div class="main-menu-drawer__container pl-2 pl-sm-8 mt-12 my-sm-auto">

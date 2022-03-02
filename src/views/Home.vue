@@ -1,7 +1,7 @@
 <template>
   <v-row class="fill-height" no-gutters>
     <v-col class="col-12 col-md-7 col-lg-6 pa-0 d-flex flex-column">
-      <HeaderComponent :appName="appName" class="flex-grow-0" />
+      <HeaderComponent class="flex-grow-0" />
       <v-container class="px-4 px-sm-10 px-lg-16 pb-0 flex-grow-1">
         <v-row class="flex-column justify-sm-center fill-height" no-gutters>
           <div>
@@ -35,17 +35,12 @@ import FooterComponent from "@/components/FooterComponent";
 import Carousel from "@/components/Carousel";
 
 export default {
-  name: "App",
-
+  name: "Home",
   components: {
     HeaderComponent,
     FooterComponent,
     Carousel,
   },
-
-  data: () => ({
-    appName: "Need for drive",
-  }),
 };
 </script>
 

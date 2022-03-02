@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib/framework';
+import ru from 'vuetify/lib/locale/ru'
 
 import MenuIcon from '../components/icons/MenuIcon.vue';
 import CloseIcon from '../components/icons/CloseIcon.vue';
@@ -9,6 +10,11 @@ import InstagramIcon from '../components/icons/InstagramIcon.vue';
 import MapPinIcon from '../components/icons/MapPinIcon.vue';
 import PrevIcon from '../components/icons/PrevIcon.vue';
 import NextIcon from '../components/icons/NextIcon.vue';
+import DividerIcon from '../components/icons/DividerIcon.vue';
+import RadioOnIcon from '../components/icons/RadioOnIcon.vue';
+import RadioOffIcon from '../components/icons/RadioOffIcon.vue';
+import CheckboxOnIcon from '../components/icons/CheckboxOnIcon.vue';
+import CheckboxOffIcon from '../components/icons/CheckboxOffIcon.vue';
 
 Vue.use(Vuetify);
 
@@ -20,10 +26,19 @@ const THEME_ICONS = {
     instagram: { component: InstagramIcon },
     mapPin: { component: MapPinIcon },
     prev: { component: PrevIcon },
-    next: { component: NextIcon }
+    next: { component: NextIcon },
+    divider: { component: DividerIcon },
+    radioOn: { component: RadioOnIcon },
+    radioOff: { component: RadioOffIcon },
+    checkboxOn: { component: CheckboxOnIcon },
+    checkboxOff: { component: CheckboxOffIcon }
 }
 
 export default new Vuetify({
+    lang: {
+        locales: { ru },
+        current: 'ru',
+    },
     theme: {
         themes: {
             light: {

@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Order from '../views/Order.vue'
+import PageNotFound from '../views/404.vue'
 
 Vue.use(VueRouter)
 
@@ -10,11 +12,25 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  {
+    path: '/order',
+    name: 'Order',
+    component: Order
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: PageNotFound
+  },
+  {
+    path: '*',
+    redirect: { name: '404' }
+  }
 ]
 
 const router = new VueRouter({
   base: location.pathname,
-  mode: 'history',
+  // mode: 'history',
   routes
 })
 
