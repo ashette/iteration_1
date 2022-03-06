@@ -7,19 +7,19 @@
           <v-stepper
             flat
             rounded="0"
-            v-model="currentStep"
             class="d-flex flex-column"
+            v-model="currentStep"
           >
             <v-stepper-header>
               <v-stepper-step
-                :editable="currentStep + 1 == step.id || step.id <= currentStep"
-                :complete="step.id < currentStep"
-                :step="step.id"
                 v-for="step in steps"
                 :key="step.id"
+                :step="step.id"
+                :editable="stepEdit(step.id)"
+                :complete="step.id < currentStep"
               >
                 {{ step.name }}
-                <v-icon v-if="step.id !== steps.length"
+                <v-icon v-if="showDivider(step.id)"
                   >$vuetify.icons.divider</v-icon
                 >
               </v-stepper-step>
@@ -38,14 +38,14 @@
               >
                 <v-form>
                   <v-stepper-content
-                    :step="step.id"
                     v-for="step in steps"
                     :key="step.id"
+                    :step="step.id"
                     class="pt-8"
                   >
                     <component
-                      v-if="step.id == currentStep"
                       :is="getStepComponent(step.id)"
+                      v-if="step.id == currentStep"
                     ></component>
                   </v-stepper-content>
                 </v-form>
@@ -180,6 +180,12 @@ export default {
         default:
           return "StepOne";
       }
+    },
+    stepEdit(stepId) {
+      return this.currentStep + 1 == stepId || stepId <= this.currentStep;
+    },
+    showDivider(stepId) {
+      return stepId !== this.steps.length;
     },
   },
   computed: {
