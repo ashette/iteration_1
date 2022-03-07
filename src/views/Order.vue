@@ -36,19 +36,26 @@
                   pr-md-8
                 "
               >
-                <v-form>
-                  <v-stepper-content
-                    v-for="step in steps"
-                    :key="step.id"
-                    :step="step.id"
-                    class="pt-8"
+                <ValidationObserver v-slot="{ passes }">
+                  <v-form
+                    id="order_form"
+                    @submit.prevent="passes(stepActivate)"
                   >
-                    <component
-                      :is="getStepComponent(step.id)"
-                      v-if="step.id == currentStep"
-                    ></component>
-                  </v-stepper-content>
-                </v-form>
+                    <v-stepper-content
+                      v-for="step in steps"
+                      :key="step.id"
+                      :step="step.id"
+                      class="pt-8"
+                    >
+                      <component
+                        :fields="step.fields"
+                        :options="options"
+                        :is="getStepComponent(step.id)"
+                        v-if="step.id == currentStep"
+                      ></component>
+                    </v-stepper-content>
+                  </v-form>
+                </ValidationObserver>
               </v-stepper-items>
 
               <v-col
@@ -73,6 +80,8 @@
                   </div>
                   <ul class="order-totals__options my-8">
                     <li
+                      v-for="option in updatedOptions"
+                      :key="option.id"
                       class="
                         order-totals__options-item
                         d-flex
@@ -81,13 +90,13 @@
                       "
                     >
                       <span class="option-name font--text font-weight-light"
-                        >{option_name}</span
+                        >{{ option.name }}</span
                       >
                       <span class="option-divider"></span>
                       <span
                         class="option-value tertiary--text font-weight-light"
                       >
-                        {option_value}
+                        {{ option.value }}
                       </span>
                     </li>
                   </ul>
@@ -103,7 +112,8 @@
                     class="order-totals__button mt-8"
                     color="primary"
                     elevation="0"
-                    @click="stepActivate()"
+                    type="submit"
+                    form="order_form"
                     >{{ actionName }}</v-btn
                   >
                 </div>
@@ -138,11 +148,24 @@ export default {
   data: () => ({
     appName: "Need for drive",
     currentStep: 1,
+    options: [],
     steps: [
       {
         id: 1,
         name: "Местоположение",
         buttonActionName: "Выбрать модель",
+        fields: {
+          city: {
+            value: null,
+            name: "Город",
+            rules: "required",
+          },
+          point: {
+            value: null,
+            name: "Пункт выдачи",
+            rules: "required",
+          },
+        },        
       },
       {
         id: 2,
@@ -192,7 +215,14 @@ export default {
     actionName() {
       return this.steps.find((step) => step.id === this.currentStep)
         .buttonActionName;
-    },
+    },   
+    updatedOptions() {
+      if (this.options) {
+        console.log(this.options);
+        return this.options.map((option) => option.value ? option : null)
+      }
+      return false;
+    }
   },
 };
 </script>
