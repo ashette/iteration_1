@@ -52,8 +52,9 @@
 <script>
 export default {
   props: {
+    currentStep: Number,
     fields: Object,
-    options: Array,
+    updateOptions: Function
   },
   data: () => ({
     cities: [
@@ -78,38 +79,54 @@ export default {
     ],
   }),
   methods: {
-    updateOptionPoint() {
-      const optionPointId = this.stepOptions.findIndex(
-        (option) => option.type === "point"
-      );
+    updateOptionPoint() { // Функция будет доставать нужное значение для опции Пункт выдачи
       const optionPoint = {
         type: "point",
-        name: "Пункт выдачи",
+        name: this.stepFields.point.name,
         value: this.stepFields.point.value,
+        stepId: this.currentStep
       };
-      
-      if (optionPointId !== -1) {
-        this.stepOptions[optionPointId] = optionPoint;
-      } else {
-        this.stepOptions.push(optionPoint);
-      }
+
+      this.updateOptions(optionPoint);
+
+      // const optionId = this.stepOptions.findIndex(function (option) {
+      //   return option.type === "point";
+      // });
+
+      // this.updateOptions (optionId, optionPoint, this.currentStep)
+
+      // this.stepOptions = this.filteredOptions;
+
+      // if (optionId !== -1) {
+      //   this.stepOptions.splice(optionId, 1);
+      // }
+
+      // if (optionPoint.value) {
+      //   this.stepOptions.push(optionPoint);
+      // }
     },
+    // updateOptions(optionId, option, stepId){
+    //   if (optionId !== -1) {
+    //     this.stepOptions.stepId.splice(optionId, 1);
+    //   }
+
+    //   this.stepOptions.push(option);
+
+    //   console.log(this.stepOptions);
+    // }
   },
   computed: {
+    filteredOptions: () => {
+      return this.stepOptions.filter(function (option) {
+        return option.type !== "point"
+      })
+    },
     stepFields: {
-      get: function () {
+      get() {
         return this.fields;
       },
       set(value) {
         this.$emit("update:fields", value);
-      },
-    },
-    stepOptions: {
-      get: function () {
-        return this.options;
-      },
-      set(value) {
-        this.$emit("update:options", value);
       },
     },
   },

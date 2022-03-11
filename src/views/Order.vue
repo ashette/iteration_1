@@ -4,39 +4,39 @@
       <HeaderComponent class="flex-grow-0" />
       <div class="order-page flex-grow-1 px-sm-6 px-lg-12">
         <v-container class="px-4 py-0">
-          <v-stepper
-            flat
-            rounded="0"
-            class="d-flex flex-column"
-            v-model="currentStep"
-          >
-            <v-stepper-header>
-              <v-stepper-step
-                v-for="step in steps"
-                :key="step.id"
-                :step="step.id"
-                :editable="stepEdit(step.id)"
-                :complete="step.id < currentStep"
-              >
-                {{ step.name }}
-                <v-icon v-if="showDivider(step.id)"
-                  >$vuetify.icons.divider</v-icon
+          <ValidationObserver v-slot="{ valid, passes }">
+            <v-stepper
+              flat
+              rounded="0"
+              class="d-flex flex-column"
+              v-model="currentStep"
+            >
+              <v-stepper-header>
+                <v-stepper-step
+                  v-for="step in steps"
+                  :key="step.id"
+                  :step="step.id"
+                  :editable="stepEdit(step.id, valid)"
+                  :complete="step.id < currentStep"
                 >
-              </v-stepper-step>
-            </v-stepper-header>
+                  {{ step.name }}
+                  <v-icon v-if="showDivider(step.id)"
+                    >$vuetify.icons.divider</v-icon
+                  >
+                </v-stepper-step>
+              </v-stepper-header>
 
-            <v-row class="fill-height" no-gutters>
-              <v-stepper-items
-                class="
-                  order-page__steps
-                  col-12 col-sm-8
-                  pa-4
-                  pt-0
-                  pl-sm-0
-                  pr-md-8
-                "
-              >
-                <ValidationObserver v-slot="{ passes }">
+              <v-row class="fill-height" no-gutters>
+                <v-stepper-items
+                  class="
+                    order-page__steps
+                    col-12 col-sm-8
+                    pa-4
+                    pt-0
+                    pl-sm-0
+                    pr-md-8
+                  "
+                >
                   <v-form
                     id="order_form"
                     @submit.prevent="passes(stepActivate)"
@@ -48,78 +48,82 @@
                       class="pt-8"
                     >
                       <component
+                        :currentStep="currentStep"
                         :fields="step.fields"
-                        :options="options"
+                        :updateOptions="updateOptions"
                         :is="getStepComponent(step.id)"
                         v-if="step.id == currentStep"
                       ></component>
                     </v-stepper-content>
                   </v-form>
-                </ValidationObserver>
-              </v-stepper-items>
+                </v-stepper-items>
 
-              <v-col
-                class="
-                  order-page__total
-                  col-12 col-sm-4
-                  pa-4
-                  pr-sm-0
-                  pt-md-8
-                  pl-md-8
-                "
-              >
-                <div class="order-totals">
-                  <div
-                    class="
-                      order-totals__header
-                      text-right
-                      font--text font-weight-medium
-                    "
-                  >
-                    Ваш заказ:
-                  </div>
-                  <ul class="order-totals__options my-8">
-                    <li
-                      v-for="option in updatedOptions"
-                      :key="option.id"
+                <v-col
+                  class="
+                    order-page__total
+                    col-12 col-sm-4
+                    pa-4
+                    pr-sm-0
+                    pt-md-8
+                    pl-md-8
+                  "
+                >
+                  <div class="order-totals">
+                    <div
                       class="
-                        order-totals__options-item
-                        d-flex
-                        justify-space-between
-                        align-end
+                        order-totals__header
+                        text-right
+                        font--text font-weight-medium
                       "
                     >
-                      <span class="option-name font--text font-weight-light"
-                        >{{ option.name }}</span
+                      Ваш заказ:
+                    </div>
+                    <ul class="order-totals__options my-8">
+                      <li
+                        v-for="option in options"
+                        :key="option.id"
+                        class="
+                          order-totals__options-item
+                          d-flex
+                          justify-space-between
+                          align-end
+                        "
                       >
-                      <span class="option-divider"></span>
-                      <span
-                        class="option-value tertiary--text font-weight-light"
-                      >
-                        {{ option.value }}
+                        {{ option.point }}
+                        <span
+                          class="option-name font--text font-weight-light"
+                          >{{ option.name }}</span
+                        >
+                        <span class="option-divider"></span>
+                        <span
+                          class="option-value tertiary--text font-weight-light"
+                        >
+                          {{ option.value }}
+                        </span>
+                      </li>
+                    </ul>
+                    <div
+                      class="order-totals__price font--text font-weight-medium"
+                    >
+                      Цена:&nbsp;
+                      <span class="price-value font-weight-regular">
+                        от {price_from} до {price_to}
                       </span>
-                    </li>
-                  </ul>
-                  <div
-                    class="order-totals__price font--text font-weight-medium"
-                  >
-                    Цена:&nbsp;
-                    <span class="price-value font-weight-regular">
-                      от {price_from} до {price_to}
-                    </span>
+                    </div>
+                    <v-btn
+                      class="order-totals__button mt-8"
+                      color="primary"
+                      elevation="0"
+                      type="submit"
+                      form="order_form"
+                      :disabled="!valid"
+                      >{{ actionName }}</v-btn
+                    >
                   </div>
-                  <v-btn
-                    class="order-totals__button mt-8"
-                    color="primary"
-                    elevation="0"
-                    type="submit"
-                    form="order_form"
-                    >{{ actionName }}</v-btn
-                  >
-                </div>
-              </v-col>
-            </v-row>
-          </v-stepper>
+                </v-col>
+              </v-row>
+            </v-stepper>
+          </ValidationObserver>
         </v-container>
       </div>
     </v-col>
@@ -165,17 +169,58 @@ export default {
             name: "Пункт выдачи",
             rules: "required",
           },
-        },        
+        },
       },
       {
         id: 2,
         name: "Модель",
         buttonActionName: "Дополнительно",
+        fields: {
+          product: {
+            value: null,
+            name: "Модель",
+            rules: "required",
+          },
+        },
       },
       {
         id: 3,
         name: "Дополнительно",
         buttonActionName: "Итого",
+        fields: {
+          color: {
+            value: null,
+            name: "Цвет",
+            rules: "required",
+          },
+          dateFrom: {
+            value: null,
+            name: "Начало аренды",
+            rules: "required",
+          },
+          dateTo: {
+            value: null,
+            name: "Конец аренды",
+            rules: "required|after:@dateFrom",
+          },
+          rate: {
+            value: null,
+            name: "Тариф",
+            rules: "required",
+          },
+          isFullTank: {
+            value: null,
+            name: "Полный бак",
+          },
+          isNeedChildChair: {
+            value: null,
+            name: "Детское кресло",
+          },
+          isRightWheel: {
+            value: null,
+            name: "Правый руль",
+          },
+        },
       },
       {
         id: 4,
@@ -204,25 +249,46 @@ export default {
           return "StepOne";
       }
     },
-    stepEdit(stepId) {
-      return this.currentStep + 1 == stepId || stepId <= this.currentStep;
+    stepEdit(stepId, valid) {
+      return (
+        (this.currentStep + 1 == stepId && valid) || stepId <= this.currentStep
+      );
     },
     showDivider(stepId) {
       return stepId !== this.steps.length;
+    },
+    updateOptions(updatedOption) {
+      this.options = this.options.filter((option) => {
+        return (
+          option.type !== updatedOption.type &&
+          option.stepId <= this.currentStep
+        );
+      });
+
+      this.clearFields(updatedOption.stepId);
+
+      if (updatedOption.value) {
+        this.options.push(updatedOption);
+      }
+    },
+    clearFields(currentStep) {
+      this.steps = this.steps.map((step) => {
+        if (step.id > currentStep) {
+          for (let field in step.fields) {
+            if (step.fields.hasOwnProperty(field)) {
+              step.fields[field].value = null
+            }
+          }
+        }
+        return step;
+      });
     },
   },
   computed: {
     actionName() {
       return this.steps.find((step) => step.id === this.currentStep)
         .buttonActionName;
-    },   
-    updatedOptions() {
-      if (this.options) {
-        console.log(this.options);
-        return this.options.map((option) => option.value ? option : null)
-      }
-      return false;
-    }
+    },
   },
 };
 </script>
