@@ -1,59 +1,57 @@
  <template>
   <div>
     <v-app-bar-nav-icon
-      class="mobile-menu-opener mt-2 ml-2 px-3 py-3 d-sm-none menu--text"
-      @click.stop="drawer = !drawer"
       absolute
+      class="mobile-menu-opener mt-2 ml-2 px-3 py-3 d-sm-none menu--text"
+      @click.stop="drawer = !drawer"      
     >
       <v-icon>$vuetify.icons.menu</v-icon>
     </v-app-bar-nav-icon>
     <v-navigation-drawer
+      app
       dark
-      mini-variant
-      :mini-variant-width="miniNavWidth"
       class="main-menu-mini-drawer py-5"
       color="menu"
-      mobile-breakpoint="768"
-      app
       :fixed="$vuetify.breakpoint.mobile"
+      mini-variant     
+      mobile-breakpoint="768"      
+      :mini-variant-width="miniNavWidth"  
     >
       <v-row class="justify-center fill-height" no-gutters>
         <v-btn class="px-3 py-3" @click.stop="drawer = !drawer" icon>
-          <v-icon>$vuetify.icons.menu</v-icon>
+          <v-icon size="32">$vuetify.icons.menu</v-icon>
         </v-btn>
 
         <v-btn
+          fab          
           class="lang-btn p-1 align-self-end font-weight-bold"
-          fab
+          color="primary"     
           outlined
-          color="primary"
-          x-small
+          x-small     
         >
           <span>Eng</span>
         </v-btn>
       </v-row>
     </v-navigation-drawer>
 
-    <v-navigation-drawer
+    <v-navigation-drawer      
       class="main-menu-drawer py-5 d-flex"
-      v-model="drawer"
+      color="menu"
+      dark
       fixed
       temporary
-      dark
-      :width="
-        navwidth < 100 ? `calc(${navwidth}% + ${miniNavWidth / 2}px` : `${navwidth}%`
-      "
-      color="menu"
       overlay-color="menu"
       overlay-opacity="0.8"
+      :width="listMenuWidth"      
+      v-model="drawer"      
     >
       <v-btn
-        class="px-3 py-3 ml-2"
         absolute
-        @click.stop="drawer = !drawer"
         icon
+        class="px-3 py-3 ml-2"        
+        @click.stop="drawer = !drawer"        
       >
-        <v-icon>$vuetify.icons.close</v-icon>
+        <v-icon size="32">$vuetify.icons.close</v-icon>
       </v-btn>
 
       <div class="main-menu-drawer__container pl-2 pl-sm-8 mt-12 my-sm-auto">
@@ -78,14 +76,14 @@
             <v-icon size="32">$vuetify.icons.{{ item.name }}</v-icon>
           </v-list-item>
         </v-list>
-        <v-btn
-          class="lang-btn p-1 align-self-end font-weight-bold d-block d-sm-none ml-2"
+        <v-btn          
           absolute
           bottom
+          color="primary"
+          class="lang-btn p-1 align-self-end font-weight-bold d-block d-sm-none ml-2"     
           fab
           outlined
-          color="primary"
-          x-small
+          x-small               
         >
           <span>Eng</span>
         </v-btn>
@@ -131,7 +129,7 @@ export default {
       },
     ],
   }),
-  computed: {
+  computed: {    
     miniNavWidth() {
       if (this.$vuetify.breakpoint.smAndDown) {
         return 85;
@@ -147,6 +145,9 @@ export default {
       } else {
         return 50;
       }
+    },
+    listMenuWidth(){
+      return this.navwidth < 100 ? `calc(${this.navwidth}% + ${this.miniNavWidth / 2}px` : `${this.navwidth}%`;
     },
   },
 };

@@ -62,7 +62,7 @@ $btn-letter-spacing: normal;
 $btn-active-opacity: 0.2 !important;
 $btn-focus-opacity: 0.2;
 $btn-hover-opacity: 0.1;
-$btn-text-transform: capitalize;
+$btn-text-transform: unset;
 
 $btn-sizes: (
   "x-small": 20,
@@ -81,6 +81,9 @@ $fab-sizes: (
 );
 
 $navigation-drawer-border-width: 0;
+$list-item-title-font-size: 14px;
+$list-item-subtitle-font-size: 14px;
+$menu-content-elevation: 0;
 
 $ripple-animation-transition-in: none;
 $ripple-animation-transition-out: none;
