@@ -140,8 +140,7 @@ export default {
     getProductName(product) {
       return product ? product.name : null;
     },
-
-    updateOptionProduct() { // Функция будет доставать нужное значение для опции Модель
+    updateOptionProduct() {
       const optionProduct = {
         type: "product",
         name: this.stepFields.product.name,

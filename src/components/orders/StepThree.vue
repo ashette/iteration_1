@@ -160,7 +160,6 @@ export default {
     getOptionName(option) {
       return option ? option.name : null;
     },
-
     getDuration(dateFrom, dateTo) {
       const diff = dateTo - dateFrom;
       var days = Math.floor(diff / 8.64e7);
@@ -181,7 +180,6 @@ export default {
 
       return dateString;
     },
-
     updateColorOption() {
       const optionColor = {
         type: "color",

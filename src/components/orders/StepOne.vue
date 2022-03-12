@@ -54,7 +54,7 @@ export default {
   props: {
     currentStep: Number,
     fields: Object,
-    updateOptions: Function
+    updateOptions: Function,
   },
   data: () => ({
     cities: [
@@ -79,47 +79,23 @@ export default {
     ],
   }),
   methods: {
-    updateOptionPoint() { // Функция будет доставать нужное значение для опции Пункт выдачи
+    updateOptionPoint() {
+      // Функция будет доставать нужное значение для опции Пункт выдачи
       const optionPoint = {
         type: "point",
         name: this.stepFields.point.name,
         value: this.stepFields.point.value,
-        stepId: this.currentStep
+        stepId: this.currentStep,
       };
 
       this.updateOptions(optionPoint);
-
-      // const optionId = this.stepOptions.findIndex(function (option) {
-      //   return option.type === "point";
-      // });
-
-      // this.updateOptions (optionId, optionPoint, this.currentStep)
-
-      // this.stepOptions = this.filteredOptions;
-
-      // if (optionId !== -1) {
-      //   this.stepOptions.splice(optionId, 1);
-      // }
-
-      // if (optionPoint.value) {
-      //   this.stepOptions.push(optionPoint);
-      // }
     },
-    // updateOptions(optionId, option, stepId){
-    //   if (optionId !== -1) {
-    //     this.stepOptions.stepId.splice(optionId, 1);
-    //   }
-
-    //   this.stepOptions.push(option);
-
-    //   console.log(this.stepOptions);
-    // }
   },
   computed: {
     filteredOptions: () => {
       return this.stepOptions.filter(function (option) {
-        return option.type !== "point"
-      })
+        return option.type !== "point";
+      });
     },
     stepFields: {
       get() {

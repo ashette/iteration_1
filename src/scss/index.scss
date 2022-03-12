@@ -307,6 +307,10 @@
       color: var(--v-font-base);
       font-weight: 300;
     }
+
+    .v-text-field__details {
+      max-width: 224px;
+    }
   }
 
   .theme--light .v-label {

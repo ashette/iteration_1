@@ -2,17 +2,17 @@
   <div>
     <v-row no-gutters>
       <div class="col-12 col-sm-6 order-total-info pa-0 mb-8">
-        <div class="order-total-info__item title">{{ order.productName }}</div>
-        <div class="order-total-info__item id">{{ order.productid }}</div>
-        <div class="order-total-info__item option">
-          <strong>Топливо:</strong> <span>{{ order.productGas }}</span>
+        <div class="order-total-info__item title">{{ productName }}</div>
+        <div class="order-total-info__item id">{{ productId }}</div>
+        <div class="order-total-info__item option" v-if="productGas">
+          <strong>Топливо:</strong> <span>{{ productGas }}</span>
         </div>
         <div class="order-total-info__item option">
-          <strong>Доступна с </strong> <span>{{ order.availibleFrom }}</span>
+          <strong>Доступна с </strong> <span>{{ availibleFrom }}</span>
         </div>
       </div>
       <div class="col-12 col-sm-6 order-image">
-        <v-img :src="order.thumbnail" contain max-width="256"></v-img>
+        <v-img :src="productImage" contain max-width="256"></v-img>
       </div>
     </v-row>
   </div>
@@ -20,16 +20,36 @@
 
 <script>
 export default {
-  data() {
-    return {
-      order: {
-        productid: "{product id}",
-        productName: "{product name}",
-        productGas: "{value}",
-        availibleFrom: "{value_from}",
-        thumbnail: require("@/assets/car.jpg"),
-      },
-    };
+  props: {
+    currentStep: Number,
+    fields: Object,
+  },
+  computed: {
+    productName: function () {
+      return this.fields.product.value.name;
+    },
+    productId: function () {
+      return this.fields.product.value.id;
+    },
+    productGas: function () {
+      return this.fields.isFullTank.value ? "100%" : null;
+    },
+    productImage: function () {
+      return this.fields.product.value.thumbnail;
+    },
+    availibleFrom: function () {
+      var options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      };
+      return new Date(this.fields.dateFrom.value).toLocaleDateString(
+        "ru",
+        options
+      );
+    },
   },
 };
 </script>

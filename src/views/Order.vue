@@ -49,7 +49,7 @@
                     >
                       <component
                         :currentStep="currentStep"
-                        :fields="step.fields"
+                        :fields="fields"
                         :updateOptions="updateOptions"
                         :is="getStepComponent(step.id)"
                         v-if="step.id == currentStep"
@@ -153,74 +153,80 @@ export default {
     appName: "Need for drive",
     currentStep: 1,
     options: [],
+    fields: {
+      city: {
+        value: null,
+        name: "Город",
+        rules: "required",
+        stepId: 1,
+      },
+      point: {
+        value: null,
+        name: "Пункт выдачи",
+        rules: "required",
+        stepId: 1,
+      },
+      product: {
+        value: null,
+        name: "Модель",
+        rules: "required",
+        stepId: 2,
+      },
+      color: {
+        value: null,
+        name: "Цвет",
+        rules: "required",
+        stepId: 3,
+      },
+      dateFrom: {
+        value: null,
+        name: "Начало аренды",
+        rules: "required",
+        stepId: 3,
+      },
+      dateTo: {
+        value: null,
+        name: "Конец аренды",
+        rules: "required|after:@dateFrom",
+        stepId: 3,
+      },
+      rate: {
+        value: null,
+        name: "Тариф",
+        rules: "required",
+        stepId: 3,
+      },
+      isFullTank: {
+        value: null,
+        name: "Полный бак",
+        stepId: 3,
+      },
+      isNeedChildChair: {
+        value: null,
+        name: "Детское кресло",
+        stepId: 3,
+      },
+      isRightWheel: {
+        value: null,
+        name: "Правый руль",
+        stepId: 3,
+      },
+    },
     steps: [
       {
         id: 1,
         name: "Местоположение",
         buttonActionName: "Выбрать модель",
-        fields: {
-          city: {
-            value: null,
-            name: "Город",
-            rules: "required",
-          },
-          point: {
-            value: null,
-            name: "Пункт выдачи",
-            rules: "required",
-          },
-        },
       },
       {
         id: 2,
         name: "Модель",
         buttonActionName: "Дополнительно",
-        fields: {
-          product: {
-            value: null,
-            name: "Модель",
-            rules: "required",
-          },
-        },
       },
       {
         id: 3,
         name: "Дополнительно",
         buttonActionName: "Итого",
-        fields: {
-          color: {
-            value: null,
-            name: "Цвет",
-            rules: "required",
-          },
-          dateFrom: {
-            value: null,
-            name: "Начало аренды",
-            rules: "required",
-          },
-          dateTo: {
-            value: null,
-            name: "Конец аренды",
-            rules: "required|after:@dateFrom",
-          },
-          rate: {
-            value: null,
-            name: "Тариф",
-            rules: "required",
-          },
-          isFullTank: {
-            value: null,
-            name: "Полный бак",
-          },
-          isNeedChildChair: {
-            value: null,
-            name: "Детское кресло",
-          },
-          isRightWheel: {
-            value: null,
-            name: "Правый руль",
-          },
-        },
       },
       {
         id: 4,
@@ -258,6 +264,7 @@ export default {
       return stepId !== this.steps.length;
     },
     updateOptions(updatedOption) {
+      // Обновляет список опций заказа
       this.options = this.options.filter((option) => {
         return (
           option.type !== updatedOption.type &&
@@ -272,16 +279,14 @@ export default {
       }
     },
     clearFields(currentStep) {
-      this.steps = this.steps.map((step) => {
-        if (step.id > currentStep) {
-          for (let field in step.fields) {
-            if (step.fields.hasOwnProperty(field)) {
-              step.fields[field].value = null
-            }
+      // При редактировании предыдущего шага, очищает поля на всех последующих шагах
+      for (let field in this.fields) {
+        if (this.fields.hasOwnProperty(field)) {
+          if (this.fields[field].stepId > currentStep) {
+            this.fields[field].value = null;
           }
         }
-        return step;
-      });
+      }
     },
   },
   computed: {
