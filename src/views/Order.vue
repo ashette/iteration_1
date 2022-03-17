@@ -6,10 +6,10 @@
         <v-container class="px-4 py-0">
           <ValidationObserver v-slot="{ valid, passes }">
             <v-stepper
-              flat
-              rounded="0"
-              class="d-flex flex-column"
               v-model="currentStep"
+              class="d-flex flex-column"   
+              flat
+              rounded="0"                         
             >
               <v-stepper-header>
                 <v-stepper-step
@@ -113,10 +113,10 @@
                     <v-btn
                       class="order-totals__button mt-8"
                       color="primary"
-                      elevation="0"
-                      type="submit"
-                      form="order_form"
                       :disabled="!valid"
+                      elevation="0"
+                      form="order_form" 
+                      type="submit"                                           
                       >{{ actionName }}</v-btn
                     >
                   </div>
@@ -256,15 +256,13 @@ export default {
       }
     },
     stepEdit(stepId, valid) {
-      return (
-        (this.currentStep + 1 == stepId && valid) || stepId <= this.currentStep
-      );
+      const isEditable = (this.currentStep + 1 == stepId && valid) || stepId <= this.currentStep;
+      return isEditable;
     },
     showDivider(stepId) {
       return stepId !== this.steps.length;
     },
     updateOptions(updatedOption) {
-      // Обновляет список опций заказа
       this.options = this.options.filter((option) => {
         return (
           option.type !== updatedOption.type &&
@@ -279,7 +277,6 @@ export default {
       }
     },
     clearFields(currentStep) {
-      // При редактировании предыдущего шага, очищает поля на всех последующих шагах
       for (let field in this.fields) {
         if (this.fields.hasOwnProperty(field)) {
           if (this.fields[field].stepId > currentStep) {

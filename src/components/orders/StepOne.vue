@@ -80,7 +80,6 @@ export default {
   }),
   methods: {
     updateOptionPoint() {
-      // Функция будет доставать нужное значение для опции Пункт выдачи
       const optionPoint = {
         type: "point",
         name: this.stepFields.point.name,

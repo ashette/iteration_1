@@ -24,8 +24,8 @@
     >
       <v-input :error-messages="errors" error></v-input>
       <v-item-group
-        class="product-grid pt-8"
         v-model="stepFields.product.value"
+        class="product-grid pt-8"        
         @change="updateOptionProduct"
       >
         <v-container>
@@ -50,10 +50,10 @@
                     >{{ product.priceMin }} -
                     {{ product.priceMin }}</v-card-subtitle
                   >
-                  <v-img
-                    :src="product.thumbnail"
+                  <v-img                    
                     contain
                     class="align-self-end"
+                    :src="product.thumbnail"
                   ></v-img>
                 </v-card>
               </v-item>
