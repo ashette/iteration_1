@@ -38,7 +38,7 @@ export default {
       return this.fields.product.value.thumbnail;
     },
     availibleFrom: function () {
-      var options = {
+      const options = {
         year: "numeric",
         month: "2-digit",
         day: "numeric",

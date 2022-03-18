@@ -4,11 +4,11 @@
     <div class="control-group">
       <v-radio-group
         v-model="stepFields.color.value"
-        row
-        on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"
         class="control-group mt-0 d-block"
-        mandatory
+        mandatory        
+        on-icon="$vuetify.icon.radioOn"
+        off-icon="$vuetify.icon.radioOn"        
+        row
         @change="updateColorOption"
       >
         <v-radio
@@ -33,11 +33,7 @@
           dateFormat="dd.MM.yyyy"
           clearText="Очистить"
           okText="Применить"
-          :textFieldProps="{
-            class: 'control-group__input',
-            placeholder: 'Введите дату и время',
-            'error-messages': errors[0],
-          }"
+          :textFieldProps="getDateTextProps(errors)"
           :datePickerProps="{ min: nowDate }"
           :timePickerProps="{ format: '24hr' }"
           @input="updateDurationOption()"
@@ -60,11 +56,7 @@
           dateFormat="dd.MM.yyyy"
           clearText="Очистить"
           okText="Применить"
-          :textFieldProps="{
-            class: 'control-group__input',
-            placeholder: 'Введите дату и время',
-            'error-messages': errors[0],
-          }"
+          :textFieldProps="getDateTextProps(errors)"
           :datePickerProps="{ min: nowDate }"
           :timePickerProps="{ format: '24hr' }"
           @input="updateDurationOption()"
@@ -79,10 +71,10 @@
       <v-radio-group
         v-model="stepFields.rate.value"
         column
-        on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"
         class="control-group mt-0 d-block"
         mandatory
+        on-icon="$vuetify.icon.radioOn"
+        off-icon="$vuetify.icon.radioOn"        
         @change="updateRateOption"
       >
         <v-radio
@@ -97,23 +89,23 @@
     <div class="control-group checkbox-group">
       <v-checkbox
         v-model="stepFields.isFullTank.value"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
         label="Полный бак, 500р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
         @change="updateAdditionalOption('isFullTank')"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isNeedChildChair.value"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
         label="Детское кресло, 200р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
         @change="updateAdditionalOption('isNeedChildChair')"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isRightWheel.value"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
         label="Правый руль, 1600р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
         @change="updateAdditionalOption('isRightWheel')"
       ></v-checkbox>
     </div>
@@ -157,14 +149,22 @@ export default {
     };
   },
   methods: {
+    getDateTextProps(errors) {
+      const props = {
+        class: "control-group__input",
+        placeholder: "Введите дату и время",
+        "error-messages": errors[0],
+      };
+      return props;
+    },
     getOptionName(option) {
       return option ? option.name : null;
     },
     getDuration(dateFrom, dateTo) {
       const diff = dateTo - dateFrom;
-      var days = Math.floor(diff / 8.64e7);
-      var hours = Math.floor((diff / 3.6e6) % 24);
-      var minutes = Math.floor((diff / 6e4) % 60);
+      const days = Math.floor(diff / 8.64e7),
+        hours = Math.floor((diff / 3.6e6) % 24),
+        minutes = Math.floor((diff / 6e4) % 60);
 
       let dateString = "";
 
