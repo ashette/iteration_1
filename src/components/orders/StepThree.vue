@@ -3,11 +3,13 @@
     <div class="control-group__label-title">Цвет</div>
     <div class="control-group">
       <v-radio-group
-        v-model="color"
-        row
-        on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"
+        v-model="stepFields.color.value"
         class="control-group mt-0 d-block"
+        mandatory        
+        on-icon="$vuetify.icon.radioOn"
+        off-icon="$vuetify.icon.radioOn"        
+        row
+        @change="updateColorOption"
       >
         <v-radio
           v-for="color in colors"
@@ -18,48 +20,62 @@
       </v-radio-group>
     </div>
     <div class="control-group__label-title">Дата аренды</div>
-    <div class="control-group date-range">
-      <span class="control-group__label">C</span>
-      <v-datetime-picker
-        v-model="dateFrom"
-        dateFormat="dd.MM.yyyy"
-        :textFieldProps="{
-          clearable: true,
-          'clear-icon': '$vuetify.icons.close',
-          class: 'control-group__input',
-          placeholder: 'Введите дату и время',
-        }"
-        :timePickerProps="{ format: '24hr' }"
-      >
-        <template slot="dateIcon"> Дата </template>
-        <template slot="timeIcon"> Время </template>
-      </v-datetime-picker>
-    </div>
-    <div class="control-group date-range">
-      <span class="control-group__label">По</span>
-      <v-datetime-picker
-        v-model="dateTo"
-        dateFormat="dd.MM.yyyy"
-        :textFieldProps="{
-          clearable: true,
-          'clear-icon': '$vuetify.icons.close',
-          class: 'control-group__input',
-          placeholder: 'Введите дату и время',
-        }"
-        :timePickerProps="{ format: '24hr' }"
-      >
-        <template slot="dateIcon"> Дата </template>
-        <template slot="timeIcon"> Время </template>
-      </v-datetime-picker>
-    </div>
+    <ValidationProvider
+      vid="dateFrom"
+      :rules="stepFields.dateFrom.rules"
+      :name="stepFields.dateFrom.name"
+      v-slot="{ errors }"
+    >
+      <div class="control-group date-range">
+        <span class="control-group__label">C</span>
+        <v-datetime-picker
+          v-model="stepFields.dateFrom.value"
+          dateFormat="dd.MM.yyyy"
+          clearText="Очистить"
+          okText="Применить"
+          :textFieldProps="getDateTextProps(errors)"
+          :datePickerProps="{ min: nowDate }"
+          :timePickerProps="{ format: '24hr' }"
+          @input="updateDurationOption()"
+        >
+          <template slot="dateIcon"> Дата </template>
+          <template slot="timeIcon"> Время </template>
+        </v-datetime-picker>
+      </div>
+    </ValidationProvider>
+    <ValidationProvider
+      vid="dateTo"
+      :rules="stepFields.dateTo.rules"
+      :name="stepFields.dateTo.name"
+      v-slot="{ errors }"
+    >
+      <div class="control-group date-range">
+        <span class="control-group__label">По</span>
+        <v-datetime-picker
+          v-model="stepFields.dateTo.value"
+          dateFormat="dd.MM.yyyy"
+          clearText="Очистить"
+          okText="Применить"
+          :textFieldProps="getDateTextProps(errors)"
+          :datePickerProps="{ min: nowDate }"
+          :timePickerProps="{ format: '24hr' }"
+          @input="updateDurationOption()"
+        >
+          <template slot="dateIcon"> Дата </template>
+          <template slot="timeIcon"> Время </template>
+        </v-datetime-picker>
+      </div>
+    </ValidationProvider>
     <div class="control-group__label-title">Тариф</div>
     <div class="control-group">
       <v-radio-group
-        v-model="rate"
+        v-model="stepFields.rate.value"
         column
-        on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"
         class="control-group mt-0 d-block"
+        mandatory
+        on-icon="$vuetify.icon.radioOn"
+        off-icon="$vuetify.icon.radioOn"        
+        @change="updateRateOption"
       >
         <v-radio
           v-for="rate in rates"
@@ -72,22 +88,25 @@
     <div class="control-group__label-title">Доп услуги</div>
     <div class="control-group checkbox-group">
       <v-checkbox
-        v-model="isFullTank"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        v-model="stepFields.isFullTank.value"
         label="Полный бак, 500р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
+        @change="updateAdditionalOption('isFullTank')"
       ></v-checkbox>
       <v-checkbox
-        v-model="isNeedChildChair"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        v-model="stepFields.isNeedChildChair.value"
         label="Детское кресло, 200р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
+        @change="updateAdditionalOption('isNeedChildChair')"
       ></v-checkbox>
       <v-checkbox
-        v-model="isRightWheel"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        v-model="stepFields.isRightWheel.value"
         label="Правый руль, 1600р"
+        on-icon="$vuetify.icon.checkboxOn"
+        off-icon="$vuetify.icon.checkboxOff"        
+        @change="updateAdditionalOption('isRightWheel')"
       ></v-checkbox>
     </div>
   </div>
@@ -95,15 +114,14 @@
 
 <script>
 export default {
+  props: {
+    currentStep: Number,
+    fields: Object,
+    updateOptions: Function,
+  },
   data() {
     return {
-      color: "{color-option #1}",
-      rate: 1,
-      dateFrom: null,
-      dateTo: null,
-      isFullTank: false,
-      isNeedChildChair: false,
-      isRightWheel: false,
+      nowDate: new Date().toISOString().slice(0, 10),
       colors: [
         {
           id: 1,
@@ -129,6 +147,94 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    getDateTextProps(errors) {
+      const props = {
+        class: "control-group__input",
+        placeholder: "Введите дату и время",
+        "error-messages": errors[0],
+      };
+      return props;
+    },
+    getOptionName(option) {
+      return option ? option.name : null;
+    },
+    getDuration(dateFrom, dateTo) {
+      const diff = dateTo - dateFrom;
+      const days = Math.floor(diff / 8.64e7),
+        hours = Math.floor((diff / 3.6e6) % 24),
+        minutes = Math.floor((diff / 6e4) % 60);
+
+      let dateString = "";
+
+      if (days > 0) {
+        dateString = dateString + `${days}д `;
+      }
+      if (hours > 0) {
+        dateString = dateString + `${hours}ч `;
+      }
+      if (minutes > 0) {
+        dateString = dateString + `${minutes}м `;
+      }
+
+      return dateString;
+    },
+    updateColorOption() {
+      const optionColor = {
+        type: "color",
+        name: this.stepFields.color.name,
+        value: this.stepFields.color.value,
+        stepId: this.currentStep,
+      };
+
+      this.updateOptions(optionColor);
+    },
+    updateRateOption() {
+      const optionRate = {
+        type: "rate",
+        name: this.stepFields.rate.name,
+        value: this.stepFields.rate.value,
+        stepId: this.currentStep,
+      };
+
+      this.updateOptions(optionRate);
+    },
+    updateDurationOption() {
+      const dateFrom = this.stepFields.dateFrom.value,
+        dateTo = this.stepFields.dateTo.value;
+
+      if (dateFrom && dateTo) {
+        const optionDuration = {
+          type: "duration",
+          name: "Длительность аренды",
+          value: this.getDuration(new Date(dateFrom), new Date(dateTo)),
+          stepId: this.currentStep,
+        };
+
+        this.updateOptions(optionDuration);
+      }
+    },
+    updateAdditionalOption(type) {
+      const optionAdditional = {
+        type: type,
+        name: this.stepFields[type].name,
+        value: this.stepFields[type].value ? "Да" : null,
+        stepId: this.currentStep,
+      };
+
+      this.updateOptions(optionAdditional);
+    },
+  },
+  computed: {
+    stepFields: {
+      get() {
+        return this.fields;
+      },
+      set(value) {
+        this.$emit("update:fields", value);
+      },
+    },
   },
 };
 </script>

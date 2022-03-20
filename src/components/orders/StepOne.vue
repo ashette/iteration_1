@@ -1,28 +1,42 @@
 <template>
   <div>
-    <div class="control-group">
-      <span class="control-group__label">Город</span>
-      <v-autocomplete
-        v-model="cityId"
-        class="control-group__input"
-        clearable
-        placeholder="Начните вводить город ..."
-        :items="cities"
-        clear-icon="$vuetify.icons.close"
-        required
-      ></v-autocomplete>
-    </div>
-    <div class="control-group">
-      <span class="control-group__label">Пункт выдачи</span>
-      <v-autocomplete
-        v-model="pointId"
-        class="control-group__input"
-        clearable
-        :clear-icon="$vuetify.icons.close"
-        placeholder="Начните вводить пункт ..."
-        required
-      ></v-autocomplete>
-    </div>
+    <ValidationProvider
+      :rules="fields.city.rules"
+      :name="fields.city.name"
+      v-slot="{ errors }"
+    >
+      <div class="control-group">
+        <span class="control-group__label">Город</span>
+        <v-autocomplete
+          v-model="stepFields.city.value"
+          class="control-group__input"
+          clearable
+          clear-icon="$vuetify.icons.close"
+          :error-messages="errors[0]"
+          :items="cities"
+          placeholder="Начните вводить город ..."
+        ></v-autocomplete>
+      </div>
+    </ValidationProvider>
+    <ValidationProvider
+      :rules="fields.point.rules"
+      :name="fields.point.name"
+      v-slot="{ errors }"
+    >
+      <div class="control-group">
+        <span class="control-group__label">Пункт выдачи</span>
+        <v-autocomplete
+          v-model="stepFields.point.value"
+          class="control-group__input"
+          clearable
+          clear-icon="$vuetify.icons.close"
+          :error-messages="errors[0]"
+          :items="points"
+          placeholder="Начните вводить пункт ..."
+          @input="updateOptionPoint"
+        ></v-autocomplete>
+      </div>
+    </ValidationProvider>
     <div class="control-group mt-12">
       <span class="control-group__label mb-4">Выбрать на карте:</span>
       <v-img
@@ -37,9 +51,12 @@
 
 <script>
 export default {
+  props: {
+    currentStep: Number,
+    fields: Object,
+    updateOptions: Function,
+  },
   data: () => ({
-    cityId: null,
-    pointId: null,
     cities: [
       "Уфа1",
       "Уральск1",
@@ -50,20 +67,43 @@ export default {
       "Увельский",
       "Ульяновск",
     ],
+    points: [
+      "Уфа1",
+      "Уральск1",
+      "Увельский1",
+      "Ульяновск1",
+      "Уфа",
+      "Уральск",
+      "Увельский",
+      "Ульяновск",
+    ],
   }),
+  methods: {
+    updateOptionPoint() {
+      const optionPoint = {
+        type: "point",
+        name: this.stepFields.point.name,
+        value: this.stepFields.point.value,
+        stepId: this.currentStep,
+      };
+
+      this.updateOptions(optionPoint);
+    },
+  },
   computed: {
-    stepOne: {
-      get: function () {
-        return this.step;
+    filteredOptions: () => {
+      return this.stepOptions.filter(function (option) {
+        return option.type !== "point";
+      });
+    },
+    stepFields: {
+      get() {
+        return this.fields;
       },
       set(value) {
-        this.$emit("update:step", value);
+        this.$emit("update:fields", value);
       },
     },
   },
 };
 </script>
-
-
-<style lang="scss">
-</style>
