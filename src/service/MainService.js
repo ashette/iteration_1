@@ -9,6 +9,7 @@ export default {
         if (cityId) {
             const response = await Api.get(`/db/point/?cityId=${cityId}`);
             return response.data.data;
+
         }
     },
     async getCategories() {
@@ -17,6 +18,6 @@ export default {
     },
     async getProducts(params) {
         const response = await Api.get(`/db/car/`, {params});
-        return response.data;
+        return response.data;  
     },
 }
