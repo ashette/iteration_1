@@ -3,16 +3,19 @@
     <v-row no-gutters>
       <v-radio-group
         v-model="category"
-        row
+        class="control-group pt-0 mt-0"
+        mandatory
         on-icon="$vuetify.icon.radioOn"
         off-icon="$vuetify.icon.radioOn"
-        class="control-group pt-0 mt-0"
+        row
       >
+        <v-radio label="Все модели" @change="getCategoryProducts()"></v-radio>
         <v-radio
           v-for="category in categories"
           :key="category.id"
           :label="category.name"
           :value="category.id"
+          @change="getCategoryProducts(category.id)"
         ></v-radio>
       </v-radio-group>
     </v-row>
@@ -23,9 +26,25 @@
       v-slot="{ errors }"
     >
       <v-input :error-messages="errors" error></v-input>
+      <template v-if="productsLoading">
+        <div class="product-grid pt-8">
+          <v-container>
+            <v-row>
+              <v-col v-for="n in pageLimit" :key="n" class="col-12 col-sm-6">
+                <v-skeleton-loader
+                  class="mx-auto"
+                  max-height="200"
+                  type="card-heading, text, image"
+                ></v-skeleton-loader>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+      </template>
       <v-item-group
+        v-else-if="products.length"
         v-model="stepFields.product.value"
-        class="product-grid pt-8"        
+        class="product-grid pt-8"
         @change="updateOptionProduct"
       >
         <v-container>
@@ -37,121 +56,172 @@
             >
               <v-item v-slot="{ active, toggle }" :value="product">
                 <v-card
-                  outlined
                   :color="active ? 'primary' : ''"
                   class="d-flex flex-column"
-                  height="224"
                   flat
+                  height="224"
+                  outlined
                   rounded="0"
                   @click="toggle"
                 >
                   <v-card-title>{{ product.name }}</v-card-title>
                   <v-card-subtitle
                     >{{ product.priceMin }} -
-                    {{ product.priceMin }}</v-card-subtitle
+                    {{ product.priceMax }}</v-card-subtitle
                   >
-                  <v-img                    
-                    contain
-                    class="align-self-end"
-                    :src="product.thumbnail"
-                  ></v-img>
+                  <div class="px-4">
+                    <v-img
+                      contain
+                      class="align-self-end ml-auto"
+                      max-height="120"
+                      max-width="260"
+                      :src="product.thumbnail.path"
+                      @error="handleImgError"
+                    ></v-img>
+                  </div>
                 </v-card>
               </v-item>
             </v-col>
           </v-row>
         </v-container>
+        <div class="text-center">
+          <v-pagination
+            v-model="page"
+            class="mt-4"
+            :length="paginationLength"
+            @input="handlePageChange"
+          ></v-pagination>
+        </div>
       </v-item-group>
+      <v-row v-else class="justify-center py-4">
+        В этой категории нет товаров
+      </v-row>
     </ValidationProvider>
   </div>
 </template>
 
 <script>
+import MainService from "@/service/MainService.js";
 export default {
   props: {
     currentStep: Number,
     fields: Object,
-    updateOptions: Function
+    price: Object,
+    updateOptions: Function,
+    updatePrice: Function,
   },
   data: () => ({
     category: 1,
     customMessages: {
       required: "Выберете {_field_}",
     },
-    categories: [
-      {
-        id: 1,
-        name: "{radio-option #1}",
-      },
-      {
-        id: 2,
-        name: "{radio-option #2}",
-      },
-      {
-        id: 3,
-        name: "{radio-option #3}",
-      },
-    ],
-    products: [
-      {
-        id: 1,
-        name: "{product #1}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-      {
-        id: 2,
-        name: "{product #2}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-      {
-        id: 3,
-        name: "{product #3}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-      {
-        id: 4,
-        name: "{product #1}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-      {
-        id: 5,
-        name: "{product #2}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-      {
-        id: 6,
-        name: "{product #3}",
-        priceMax: 0,
-        priceMin: 0,
-        thumbnail: require("@/assets/car.jpg"),
-      },
-    ],
+    categories: null,
+    page: 1,
+    pageLimit: 8,
+    pageCount: 0,
+    products: null,
+    productsLoading: true,
+    no_image: require("@/assets/no_image.jpg"),
   }),
   methods: {
-    getProductName(product) {
-      return product ? product.name : null;
+    getRequestParams(categoryId, page, pageSize) {
+      let params = {};
+      if (categoryId) {
+        params["categoryId"] = categoryId;
+      }
+      if (page) {
+        params["page"] = page - 1;
+      }
+      if (pageSize) {
+        params["limit"] = pageSize;
+      }
+      return params;
+    },
+    async getCategories() {
+      try {
+        this.categories = await MainService.getCategories();
+      } catch (error) {
+        console.log(error);
+      } finally {
+      }
+    },
+    async getCategoryProducts(categoryId) {
+      if (categoryId !== this.category) {
+        this.page = 1;
+      }
+
+      const params = this.getRequestParams(
+        categoryId,
+        this.page,
+        this.pageLimit
+      );
+
+      this.productsLoading = true;
+
+      try {
+        const products = await MainService.getProducts(params);
+        this.products = products.data;
+        this.pageCount = products.count;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.productsLoading = false;
+      }
     },
     updateOptionProduct() {
-      const optionProduct = {
+      const defaultOptionProduct = {
         type: "product",
-        name: this.stepFields.product.name,
-        value: this.getProductName(this.stepFields.product.value),
-        stepId: this.currentStep
+        name: "",
+        value: "",
+        stepId: this.currentStep,
       };
 
-      this.updateOptions(optionProduct);
+      const isProductSelected = this.stepFields.product.value !== undefined;
+
+      if (isProductSelected) {
+        this.updateOptions({
+          ...defaultOptionProduct,
+          name: this.stepFields.product.name,
+          value: this.stepFields.product.value.name,
+        });
+
+        this.updatePrice({
+          ...this.price,
+          priceMin: this.stepFields.product.value.priceMin,
+          priceMax: this.stepFields.product.value.priceMax,
+        });
+      } else {
+        this.updateOptions(defaultOptionProduct);
+        this.updatePrice({
+          ...this.price,
+          priceMin: 0,
+          priceMax: 0,
+        });
+      }
+    },
+    handlePageChange(value) {
+      this.page = value;
+      this.getCategoryProducts(this.category);
+    },
+    handleImgError: function (image) {
+      const no_image = require("@/assets/no_image.jpg");
+      this.products = this.products.map((product) => {
+        if (product.thumbnail.path === image) {
+          product.thumbnail.path = no_image;
+        }
+        return product;
+      });
     },
   },
+  mounted() {
+    this.getCategories();
+    this.getCategoryProducts();
+  },
   computed: {
+    paginationLength: function () {
+      let length = Math.round(this.pageCount / this.pageLimit);
+      return length > 1 ? length : 1;
+    },
     stepFields: {
       get() {
         return this.fields;

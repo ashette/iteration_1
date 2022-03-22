@@ -118,6 +118,9 @@
 }
 
 .order-totals {
+    position: sticky;
+    top: 24px;
+    
     &__header {
         font-size: 18px;
     }
@@ -154,5 +157,23 @@
 
     &__button {
         width: 100%;
+    }
+}
+
+.v-pagination {
+    &__navigation {
+        box-shadow: none;
+        border: 1px solid var(--v-disabled-base);
+
+        .v-icon__component {
+            height: 16px;
+            width: 24px;
+        }
+    }
+
+    &__item {
+        font-size: 16px;
+        box-shadow: none;
+        border: 1px solid var(--v-disabled-base);
     }
 }

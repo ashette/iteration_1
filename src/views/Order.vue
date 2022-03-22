@@ -51,6 +51,8 @@
                         :currentStep="currentStep"
                         :fields="fields"
                         :updateOptions="updateOptions"
+                        :price="price"
+                        :updatePrice="updatePrice"
                         :is="getStepComponent(step.id)"
                         v-if="step.id == currentStep"
                       ></component>
@@ -103,11 +105,12 @@
                       </li>
                     </ul>
                     <div
+                      v-if="updatedPrice"
                       class="order-totals__price font--text font-weight-medium"
                     >
                       Цена:&nbsp;
                       <span class="price-value font-weight-regular">
-                        от {price_from} до {price_to}
+                        {{ updatedPrice }}
                       </span>
                     </div>
                     <v-btn
@@ -153,6 +156,11 @@ export default {
     appName: "Need for drive",
     currentStep: 1,
     options: [],
+    price: {
+      priceMin: 0,
+      priceMax: 0,
+      total: 0,
+    },
     fields: {
       city: {
         value: null,
@@ -276,6 +284,9 @@ export default {
         this.options.push(updatedOption);
       }
     },
+    updatePrice(price) {
+      this.price = price
+    },
     clearFields(currentStep) {
       for (let field in this.fields) {
         if (this.fields.hasOwnProperty(field)) {
@@ -287,6 +298,14 @@ export default {
     },
   },
   computed: {
+    updatedPrice() {
+      if (this.price.total) {
+        return this.price.total;
+      } else if (this.price.priceMin && this.price.priceMax) {
+        return `от ${this.price.priceMin} до ${this.price.priceMax}`;
+      }
+      return null;
+    },
     actionName() {
       return this.steps.find((step) => step.id === this.currentStep)
         .buttonActionName;
