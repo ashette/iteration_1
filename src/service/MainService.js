@@ -19,4 +19,8 @@ export default {
         const response = await Api.get(`/db/car/`, {params});
         return response.data;
     },
+    async getRates(params) {
+        const response = await Api.get(`/db/rate/`);
+        return response.data.data;
+    },
 }

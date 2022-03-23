@@ -361,6 +361,12 @@
   }
 }
 
+.v-radio.v-radio--is-disabled {
+  .v-label {
+    color: var(--v-tertiary-lighten2);
+  }
+}
+
 .date-range {
   display: flex;
   flex-wrap: wrap;

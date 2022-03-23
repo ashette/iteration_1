@@ -4,7 +4,6 @@
       <v-radio-group
         v-model="category"
         class="control-group pt-0 mt-0"
-        mandatory
         on-icon="$vuetify.icon.radioOn"
         off-icon="$vuetify.icon.radioOn"
         row
@@ -25,6 +24,7 @@
       :custom-messages="customMessages"
       v-slot="{ errors }"
     >
+      <v-input v-model="stepFields.product.value" class="d-none"></v-input>
       <v-input :error-messages="errors" error></v-input>
       <template v-if="productsLoading">
         <div class="product-grid pt-8">
@@ -111,7 +111,7 @@ export default {
     updatePrice: Function,
   },
   data: () => ({
-    category: 1,
+    category: null,
     customMessages: {
       required: "Выберете {_field_}",
     },
@@ -186,9 +186,9 @@ export default {
         });
 
         this.updatePrice({
-          ...this.price,
           priceMin: this.stepFields.product.value.priceMin,
           priceMax: this.stepFields.product.value.priceMax,
+          total: 0
         });
       } else {
         this.updateOptions(defaultOptionProduct);
@@ -214,8 +214,11 @@ export default {
     },
   },
   mounted() {
+    if (this.stepFields.product.value) {
+      this.category = this.stepFields.product.value.categoryId.id;
+    }
     this.getCategories();
-    this.getCategoryProducts();
+    this.getCategoryProducts(this.category);
   },
   computed: {
     paginationLength: function () {

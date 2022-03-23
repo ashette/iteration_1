@@ -7,9 +7,9 @@
           <ValidationObserver v-slot="{ valid, passes }">
             <v-stepper
               v-model="currentStep"
-              class="d-flex flex-column"   
+              class="d-flex flex-column"
               flat
-              rounded="0"                         
+              rounded="0"
             >
               <v-stepper-header>
                 <v-stepper-step
@@ -118,8 +118,8 @@
                       color="primary"
                       :disabled="!valid"
                       elevation="0"
-                      form="order_form" 
-                      type="submit"                                           
+                      form="order_form"
+                      type="submit"
                       >{{ actionName }}</v-btn
                     >
                   </div>
@@ -264,7 +264,8 @@ export default {
       }
     },
     stepEdit(stepId, valid) {
-      const isEditable = (this.currentStep + 1 == stepId && valid) || stepId <= this.currentStep;
+      const isEditable =
+        (this.currentStep + 1 == stepId && valid) || stepId <= this.currentStep;
       return isEditable;
     },
     showDivider(stepId) {
@@ -285,13 +286,13 @@ export default {
       }
     },
     updatePrice(price) {
-      this.price = price
+      this.price = price;
     },
     clearFields(currentStep) {
       for (let field in this.fields) {
         if (this.fields.hasOwnProperty(field)) {
           if (this.fields[field].stepId > currentStep) {
-            this.fields[field].value = null;
+            this.fields[field].value = null;            
           }
         }
       }
@@ -300,9 +301,9 @@ export default {
   computed: {
     updatedPrice() {
       if (this.price.total) {
-        return this.price.total;
+        return `${this.price.total}₽`;
       } else if (this.price.priceMin && this.price.priceMax) {
-        return `от ${this.price.priceMin} до ${this.price.priceMax}`;
+        return `от ${this.price.priceMin} до ${this.price.priceMax}₽`;
       }
       return null;
     },
