@@ -29,13 +29,21 @@ export default {
       return this.fields.product.value.name;
     },
     productId: function () {
-      return this.fields.product.value.id;
+      return this.fields.product.value.number;
     },
     productGas: function () {
-      return this.fields.isFullTank.value ? "100%" : null;
+      const fullTank = this.fields.isFullTank.value;
+      const productTank = this.fields.product.value.tank;
+
+      if (fullTank) {
+        return "100%";
+      } else if (productTank) {
+        return `${productTank}%`;
+      }
+      return null;
     },
     productImage: function () {
-      return this.fields.product.value.thumbnail;
+      return this.fields.product.value.thumbnail.path;
     },
     availibleFrom: function () {
       const options = {

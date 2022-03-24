@@ -5,17 +5,18 @@
       <v-radio-group
         v-model="stepFields.color.value"
         class="control-group mt-0 d-block"
-        mandatory        
+        mandatory
         on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"        
+        off-icon="$vuetify.icon.radioOn"
         row
         @change="updateColorOption"
       >
+        <v-radio label="Любой" value="Любой"></v-radio>
         <v-radio
           v-for="color in colors"
-          :key="color.id"
-          :label="color.name"
-          :value="color.name"
+          :key="color"
+          :label="color"
+          :value="color"
         ></v-radio>
       </v-radio-group>
     </div>
@@ -74,14 +75,15 @@
         class="control-group mt-0 d-block"
         mandatory
         on-icon="$vuetify.icon.radioOn"
-        off-icon="$vuetify.icon.radioOn"        
+        off-icon="$vuetify.icon.radioOn"
         @change="updateRateOption"
       >
         <v-radio
           v-for="rate in rates"
-          :key="rate.id"
-          :label="rate.name"
-          :value="rate.id"
+          :key="rate.rateTypeId.id"
+          :label="getRateName(rate)"
+          :value="rate"
+          :disabled="checkRateDisabled(rate)"
         ></v-radio>
       </v-radio-group>
     </div>
@@ -91,61 +93,48 @@
         v-model="stepFields.isFullTank.value"
         label="Полный бак, 500р"
         on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"        
-        @change="updateAdditionalOption('isFullTank')"
+        off-icon="$vuetify.icon.checkboxOff"
+        @change="updateAdditionalOption('isFullTank', 500)"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isNeedChildChair.value"
         label="Детское кресло, 200р"
         on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"        
-        @change="updateAdditionalOption('isNeedChildChair')"
+        off-icon="$vuetify.icon.checkboxOff"
+        @change="updateAdditionalOption('isNeedChildChair', 200)"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isRightWheel.value"
         label="Правый руль, 1600р"
         on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"        
-        @change="updateAdditionalOption('isRightWheel')"
+        off-icon="$vuetify.icon.checkboxOff"
+        @change="updateAdditionalOption('isRightWheel', 1600)"
       ></v-checkbox>
     </div>
   </div>
 </template>
 
 <script>
+import MainService from "@/service/MainService.js";
 export default {
   props: {
     currentStep: Number,
     fields: Object,
+    price: Object,
     updateOptions: Function,
+    updatePrice: Function,
   },
   data() {
     return {
       nowDate: new Date().toISOString().slice(0, 10),
-      colors: [
-        {
-          id: 1,
-          name: "{color-option #1}",
-        },
-        {
-          id: 2,
-          name: "{color-option #2}",
-        },
-        {
-          id: 3,
-          name: "{color-option #3}",
-        },
-      ],
-      rates: [
-        {
-          id: 1,
-          name: "{rate-option #1}",
-        },
-        {
-          id: 2,
-          name: "{rate-option #2}",
-        },
-      ],
+      colors: [],
+      rates: [],
+      rateUnits: {
+        "мин": 1,
+        "сутки": 1440,
+        "7 дней": 10080,
+        "30 дней": 43200,
+      },
     };
   },
   methods: {
@@ -160,11 +149,10 @@ export default {
     getOptionName(option) {
       return option ? option.name : null;
     },
-    getDuration(dateFrom, dateTo) {
-      const diff = dateTo - dateFrom;
-      const days = Math.floor(diff / 8.64e7),
-        hours = Math.floor((diff / 3.6e6) % 24),
-        minutes = Math.floor((diff / 6e4) % 60);
+    getDuration(interval) {
+      const days = Math.floor(interval / 8.64e7),
+        hours = Math.floor((interval / 3.6e6) % 24),
+        minutes = Math.floor((interval / 6e4) % 60);
 
       let dateString = "";
 
@@ -180,6 +168,29 @@ export default {
 
       return dateString;
     },
+    getRateName(rate) {
+      const rateName = `${rate.rateTypeId.name}, ${rate.price}₽/${rate.rateTypeId.unit}`;
+      return rateName;
+    },
+    getTotalRatePrice(rate, interval) {
+      let newPrice;
+
+      if (interval > 0 && rate) {
+        const rateUnit = this.rateUnits[rate.rateTypeId.unit];
+        const minutes = Math.floor(interval / 6e4);
+        newPrice = Math.round((rate.price * minutes) / rateUnit);
+      }
+
+      return newPrice;
+    },
+    async getRates() {
+      try {
+        const rates = await MainService.getRates();
+        this.rates = rates.filter((rate) => rate.rateTypeId);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     updateColorOption() {
       const optionColor = {
         type: "color",
@@ -191,14 +202,38 @@ export default {
       this.updateOptions(optionColor);
     },
     updateRateOption() {
-      const optionRate = {
+      const defaultOptionRate = {
         type: "rate",
-        name: this.stepFields.rate.name,
-        value: this.stepFields.rate.value,
+        name: "",
+        value: "",
         stepId: this.currentStep,
       };
 
-      this.updateOptions(optionRate);
+      const isRateSelected = this.stepFields.rate.value !== undefined;
+
+      if (isRateSelected) {
+        this.updateOptions({
+          ...defaultOptionRate,
+          name: this.stepFields.rate.name,
+          value: this.stepFields.rate.value.rateTypeId.name,
+        });
+
+        const newPrice = this.getTotalRatePrice(
+          this.stepFields.rate.value,
+          this.dateInterval
+        );
+
+        this.updatePrice({
+          ...this.price,
+          total: newPrice,
+        });
+      } else {
+        this.updateOptions(defaultOptionRate);
+        this.updatePrice({
+          ...this.price,
+          total: 0,
+        });
+      }
     },
     updateDurationOption() {
       const dateFrom = this.stepFields.dateFrom.value,
@@ -208,25 +243,72 @@ export default {
         const optionDuration = {
           type: "duration",
           name: "Длительность аренды",
-          value: this.getDuration(new Date(dateFrom), new Date(dateTo)),
+          value: this.getDuration(this.dateInterval),
           stepId: this.currentStep,
         };
+
+        const newPrice = this.getTotalRatePrice(
+          this.stepFields.rate.value,
+          this.dateInterval
+        );
+
+        this.updatePrice({
+          ...this.price,
+          total: newPrice,
+        });
 
         this.updateOptions(optionDuration);
       }
     },
-    updateAdditionalOption(type) {
+    updateAdditionalOption(type, price) {
+      const isFieldSelected = this.stepFields[type].value !== false;
       const optionAdditional = {
         type: type,
         name: this.stepFields[type].name,
-        value: this.stepFields[type].value ? "Да" : null,
+        value: this.stepFields[type].value ? "Да" : "",
         stepId: this.currentStep,
       };
 
+      if (isFieldSelected && this.price.total) {
+        this.updatePrice({
+          ...this.price,
+          total: this.price.total + price,
+        });
+      } else {
+        this.updatePrice({
+          ...this.price,
+          total: this.price.total - price,
+        });
+      }
+
       this.updateOptions(optionAdditional);
     },
+    setColors(product) {
+      if (product) {
+        this.colors = [...new Set(product.colors)]
+      }
+    },
+    checkRateDisabled(rate) {
+      if (rate.rateTypeId) {
+        const dateIntervalMinutes = Math.floor(this.dateInterval / 6e4);
+        if (dateIntervalMinutes < this.rateUnits[rate.rateTypeId.unit]) {
+          return true;
+        }
+      }
+      return false;
+    },
+  },
+  mounted() {
+    this.getRates();
+    this.setColors(this.fields.product.value);
   },
   computed: {
+    dateInterval: function () {
+      const interval =
+        this.stepFields.dateTo.value - this.stepFields.dateFrom.value;
+
+      return interval;
+    },
     stepFields: {
       get() {
         return this.fields;
