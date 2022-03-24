@@ -3,8 +3,19 @@
     <v-col class="d-flex flex-column">
       <HeaderComponent class="flex-grow-0" />
       <div class="order-page flex-grow-1 px-sm-6 px-lg-12">
+        <v-container
+          v-if="isRequesting"
+          class="d-flex justify-center align-center px-4 py-0"
+        >
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-container>
         <v-container class="px-4 py-0">
+          <div v-if="is404Error">Order Not Found</div>
           <v-stepper
+            v-else
             v-model="currentStep"
             class="d-flex flex-column"
             flat
@@ -44,7 +55,7 @@
                           v-if="productGas"
                           class="order-total-info__item option"
                         >
-                          <strong>Топливо:</strong>
+                          <strong>Топливо: </strong>
                           <span>{{ productGas }}</span>
                         </div>
                         <div class="order-total-info__item option">
@@ -95,7 +106,7 @@
                         justify-space-between
                         align-end
                       "
-                    >                      
+                    >
                       <span class="option-name font--text font-weight-light">
                         {{ option.name }}
                       </span>
@@ -148,15 +159,23 @@ export default {
     currentStep: 1,
     options: [],
     noImage: require("@/assets/no_image.jpg"),
+    isRequesting: true,
+    is404Error: false,
   }),
   methods: {
     async getOrderDetails() {
       try {
         const data = await MainService.getOrder(this.$route.params.id);
+
         this.orderDetails = data;
         this.setOptions(this.orderDetails);
       } catch (error) {
+        if (error.response.status === 404) {
+          this.is404Error = true;
+        }
         console.log(error);
+      } finally {
+        this.isRequesting = false;
       }
     },
     getDuration(interval) {
@@ -262,7 +281,7 @@ export default {
         minute: "numeric",
       };
 
-      return new Date(this.orderDetails.dateFrom * 1000).toLocaleDateString(
+      return new Date(this.orderDetails.dateFrom).toLocaleDateString(
         "ru",
         options
       );
