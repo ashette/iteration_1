@@ -100,6 +100,19 @@
     }
   }
 
+  &.secondary {
+    background: linear-gradient(-90deg, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.25)) !important;
+
+    &:hover {
+      background-color: var(--v-secondary-darken1) !important;
+    }
+
+    &:active,
+    &:focus {
+      background-color: var(--v-secondary-darken2) !important;
+    }
+  }
+
   .theme--light &.v-btn--disabled.v-btn--has-bg {
     background-color: var(--v-disabled-base) !important;
     color: map-get($shades, "white") !important;

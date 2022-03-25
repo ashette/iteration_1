@@ -70,11 +70,15 @@ export default {
   }
 
   .title {
-    font-size: 18px;
+    font-size: 18px !important;
     line-height: 22px;
     font-weight: 400;
     text-transform: uppercase;
     color: var(--v-font-base);
+  }
+
+  .main-title {
+    font-size: 22px;
   }
 
   .id {
