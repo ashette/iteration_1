@@ -91,7 +91,6 @@
                           align-end
                         "
                       >
-                        {{ option.point }}
                         <span
                           class="option-name font--text font-weight-light"
                           >{{ option.name }}</span
@@ -120,8 +119,9 @@
                       elevation="0"
                       form="order_form"
                       type="submit"
-                      >{{ actionName }}</v-btn
-                    >
+                      @click="showDialog()"
+                      >{{ actionName }}
+                    </v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -129,6 +129,32 @@
           </ValidationObserver>
         </v-container>
       </div>
+      <v-dialog
+        v-model="dialog"
+        overlay-color="white"
+        overlay-opacity="0.9"
+        persistent
+      >
+        <div
+          class="
+            order-sumbit-dialog
+            d-flex
+            align-center
+            justify-center
+            flex-column
+          "
+        >
+          <v-subheader class="order-sumbit-dialog__subheader justify-center"
+            >Подтвердить заказ</v-subheader
+          >
+          <div class="order-sumbit-dialog__buttons mt-6">
+            <v-btn color="primary" elevation="0"> Подтвердить </v-btn>
+            <v-btn color="secondary" elevation="0" @click="dialog = false">
+              Вернуться
+            </v-btn>
+          </div>
+        </div>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -156,6 +182,7 @@ export default {
     appName: "Need for drive",
     currentStep: 1,
     options: [],
+    dialog: false,
     price: {
       priceMin: 0,
       priceMax: 0,
@@ -271,6 +298,11 @@ export default {
     showDivider(stepId) {
       return stepId !== this.steps.length;
     },
+    showDialog() {
+      if (this.currentStep == this.steps.length) {
+        this.dialog = !this.dialog;
+      }
+    },
     updateOptions(updatedOption) {
       this.options = this.options.filter((option) => {
         return (
@@ -292,7 +324,7 @@ export default {
       for (let field in this.fields) {
         if (this.fields.hasOwnProperty(field)) {
           if (this.fields[field].stepId > currentStep) {
-            this.fields[field].value = null;            
+            this.fields[field].value = null;
           }
         }
       }

@@ -160,6 +160,28 @@
     }
 }
 
+.order-sumbit-dialog {
+    max-width: 400px;
+    margin: auto;
+    height: 100%;
+
+    &__subheader.v-subheader {
+        text-align: center;
+        font-size: 24px;
+        color: var(--v-font-base);
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0 16px;
+
+        .v-btn.v-size--default {
+            padding: 0 36px;
+        }
+    }
+}
+
 .v-pagination {
     &__navigation {
         box-shadow: none;

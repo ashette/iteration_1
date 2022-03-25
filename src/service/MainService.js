@@ -24,4 +24,12 @@ export default {
         const response = await Api.get(`/db/rate/`);
         return response.data.data;
     },
+    async getOrder(id) {
+        const response = await Api.get(`/db/order/${id}`);
+        return response.data.data;
+    },
+    async addOrder(order) {
+        const response = await Api.post(`/db/order/`, order);
+        return response;
+    },
 }

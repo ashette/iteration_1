@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Order from '../views/Order.vue'
+import OrderDetails from '../views/OrderDetails.vue'
 import PageNotFound from '../views/404.vue'
 
 Vue.use(VueRouter)
@@ -16,6 +17,11 @@ const routes = [
     path: '/order',
     name: 'Order',
     component: Order
+  },
+  {
+    path: '/order/:id',
+    name: 'Order Details',
+    component: OrderDetails
   },
   {
     path: '/404',
