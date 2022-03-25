@@ -15,7 +15,7 @@
           :error-messages="errors[0]"
           :items="cities"
           item-text="name"
-          item-value="id"
+          return-object
           :loading="citiesLoading"
           no-data-text="Городов не найдено"
           placeholder="Начните вводить город ..."
@@ -119,7 +119,9 @@ export default {
       this.clearMapObjects(this.map);
       try {
         this.pointsLoading = true;
-        this.points = await MainService.getPoints(this.stepFields.city.value);
+        if(this.stepFields.city.value){
+          this.points = await MainService.getPoints(this.stepFields.city.value.id);
+        }
         if (this.points) {
           this.points = await this.getPointCoordinates(this.points);
         }
