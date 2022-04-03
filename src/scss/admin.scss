@@ -86,6 +86,7 @@ $admin-font: "Helvetica";
             &.primary {
                 background: var(--v-admin-primary-base) !important;
                 border-color: var(--v-admin-primary-base) !important;
+                color: var(--v-background-base);
             }
 
             &.v-btn--text {
