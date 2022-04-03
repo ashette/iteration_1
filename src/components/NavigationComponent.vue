@@ -119,14 +119,6 @@ export default {
         name: "telegram",
         href: "/",
       },
-      {
-        name: "facebook",
-        href: "/",
-      },
-      {
-        name: "instagram",
-        href: "/",
-      },
     ],
   }),
   computed: {    
