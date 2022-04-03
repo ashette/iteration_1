@@ -64,8 +64,27 @@ export default new Vuetify({
                 purple: {
                     base: '#720C7B',
                     darken1: '#281349'
-                }
-
+                },
+                'admin-primary': {
+                    base: '#007BFF'
+                },
+                'admin-secondary': {
+                    base: '#CB3656'
+                },
+                'admin-tertiary': {
+                    base: '#E9ECEF'
+                },
+                'admin-background': {
+                    base: '#F5F6F8'
+                },
+                'admin-font': {
+                    base: '#3D5170',
+                    darken1: '#495057'
+                },
+                'admin-border': {
+                    base: '#BECAD6'
+                },
+                'admin-error': '#C4183C'
             }
         },
         options: {
