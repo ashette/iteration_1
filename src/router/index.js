@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Order from '../views/Order.vue'
 import OrderDetails from '../views/OrderDetails.vue'
+import AdminPanel from '../views/AdminPanel.vue'
 import PageNotFound from '../views/404.vue'
 
 Vue.use(VueRouter)
@@ -22,6 +23,11 @@ const routes = [
     path: '/order/:id',
     name: 'OrderDetails',
     component: OrderDetails
+  },
+  {
+    path: '/admin/',
+    name: 'AdminPanel',
+    component: AdminPanel
   },
   {
     path: '/404',

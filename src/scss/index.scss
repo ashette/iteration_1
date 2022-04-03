@@ -1,3 +1,5 @@
+@import "fonts.scss";
+
 .v-application {
   .theme--light a {
     color: var(--v-font-base);
@@ -78,7 +80,7 @@
     background-color: map-get($shades, "black");
   }
 
-  .theme--light & {
+  .v-main .theme--light & {
     color: var(--v-tertiary-base);
 
     .v-icon {
@@ -163,15 +165,17 @@
   }
 }
 
-.logo {
-  font-size: 30px;
-  line-height: normal;
-}
+.v-main {
+  .v-toolbar {
+    &__content {
+      padding: 0;
+      height: auto !important;
+    }
+  }
 
-.v-toolbar {
-  &__content {
-    padding: 0;
-    height: auto !important;
+  .logo {
+    font-size: 30px;
+    line-height: normal;
   }
 }
 
