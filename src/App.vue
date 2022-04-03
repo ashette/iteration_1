@@ -1,21 +1,12 @@
 <template>
   <v-app>
-    <NavigationComponent />
-    <v-main>
-      <router-view />
-    </v-main>
+    <router-view />
   </v-app>
 </template>
 
 <script>
-import NavigationComponent from "@/components/NavigationComponent";
-
 export default {
   name: "App",
-
-  components: {
-    NavigationComponent,
-  }
 };
 </script>
 

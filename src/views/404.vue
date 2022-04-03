@@ -1,6 +1,17 @@
 <template>
-    <div>Page not found</div>
+  <div>
+    <NavigationComponent />
+    <v-main>
+      <div>Page not found</div>
+    </v-main>
+  </div>
 </template>
 <script>
-export default {}
+import NavigationComponent from "@/components/NavigationComponent";
+export default {
+  name: "PageNotFound",
+  components: {
+    NavigationComponent,
+  },
+};
 </script>
