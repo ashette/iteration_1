@@ -1,24 +1,23 @@
 <template>
   <v-app>
-    <NavigationComponent />
-    <v-main>
+    <component :is="layout">
       <router-view />
-    </v-main>
+    </component>
   </v-app>
 </template>
 
 <script>
-import NavigationComponent from "@/components/NavigationComponent";
-
+import AdminLayout from "@/layouts/AdminLayout";
+import MainLayout from "@/layouts/MainLayout";
 export default {
-  name: "App",
-
+  computed: {
+    layout() {
+      return (this.$route.meta.layout || "main") + "-layout";
+    },
+  },
   components: {
-    NavigationComponent,
-  }
+    AdminLayout,
+    MainLayout,
+  },
 };
 </script>
-
-<style lang="scss">
-@import "./scss/index.scss";
-</style>

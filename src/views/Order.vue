@@ -1,182 +1,198 @@
 <template>
-  <v-row no-gutters class="fill-height">
-    <v-col class="d-flex flex-column">
-      <HeaderComponent class="flex-grow-0" />
-      <div class="order-page flex-grow-1 px-sm-6 px-lg-12">
-        <v-container class="px-4 py-0">
-          <ValidationObserver v-slot="{ valid, passes }">
-            <v-stepper
-              v-model="currentStep"
-              class="d-flex flex-column"
-              flat
-              rounded="0"
-            >
-              <v-stepper-header>
-                <v-stepper-step
-                  v-for="step in steps"
-                  :key="step.id"
-                  :step="step.id"
-                  :editable="stepEdit(step.id, valid)"
-                  :complete="step.id < currentStep"
+  <div>
+    <NavigationComponent />
+    <v-main>
+      <v-row no-gutters class="fill-height">
+        <v-col class="d-flex flex-column">
+          <HeaderComponent class="flex-grow-0" />
+          <div class="order-page flex-grow-1 px-sm-6 px-lg-12">
+            <v-container class="px-4 py-0">
+              <ValidationObserver v-slot="{ valid, passes }">
+                <v-stepper
+                  v-model="currentStep"
+                  class="d-flex flex-column"
+                  flat
+                  rounded="0"
                 >
-                  {{ step.name }}
-                  <v-icon v-if="showDivider(step.id)"
-                    >$vuetify.icons.divider</v-icon
-                  >
-                </v-stepper-step>
-              </v-stepper-header>
-
-              <v-row class="fill-height" no-gutters>
-                <v-stepper-items
-                  class="
-                    order-page__steps
-                    col-12 col-sm-8
-                    pa-4
-                    pt-0
-                    pl-sm-0
-                    pr-md-8
-                  "
-                >
-                  <v-form
-                    id="order_form"
-                    @submit.prevent="passes(stepActivate)"
-                  >
-                    <v-stepper-content
+                  <v-stepper-header>
+                    <v-stepper-step
                       v-for="step in steps"
                       :key="step.id"
                       :step="step.id"
-                      class="pt-8"
+                      :editable="stepEdit(step.id, valid)"
+                      :complete="step.id < currentStep"
                     >
-                      <component
-                        :currentStep="currentStep"
-                        :fields="fields"
-                        :updateOptions="updateOptions"
-                        :price="price"
-                        :updatePrice="updatePrice"
-                        :is="getStepComponent(step.id)"
-                        v-if="step.id == currentStep"
-                      ></component>
-                    </v-stepper-content>
-                  </v-form>
-                </v-stepper-items>
+                      {{ step.name }}
+                      <v-icon v-if="showDivider(step.id)"
+                        >$vuetify.icons.divider</v-icon
+                      >
+                    </v-stepper-step>
+                  </v-stepper-header>
 
-                <v-col
-                  class="
-                    order-page__total
-                    col-12 col-sm-4
-                    pa-4
-                    pr-sm-0
-                    pt-md-8
-                    pl-md-8
-                  "
-                >
-                  <div class="order-totals">
-                    <div
+                  <v-row class="fill-height" no-gutters>
+                    <v-stepper-items
                       class="
-                        order-totals__header
-                        text-right
-                        font--text font-weight-medium
+                        order-page__steps
+                        col-12 col-sm-8
+                        pa-4
+                        pt-0
+                        pl-sm-0
+                        pr-md-8
                       "
                     >
-                      Ваш заказ:
-                    </div>
-                    <ul class="order-totals__options my-8">
-                      <li
-                        v-for="option in options"
-                        :key="option.id"
-                        class="
-                          order-totals__options-item
-                          d-flex
-                          justify-space-between
-                          align-end
-                        "
+                      <v-form
+                        id="order_form"
+                        @submit.prevent="passes(stepActivate)"
                       >
-                        <span
-                          class="option-name font--text font-weight-light"
-                          >{{ option.name }}</span
+                        <v-stepper-content
+                          v-for="step in steps"
+                          :key="step.id"
+                          :step="step.id"
+                          class="pt-8"
                         >
-                        <span class="option-divider"></span>
-                        <span
-                          class="option-value tertiary--text font-weight-light"
-                        >
-                          {{ option.value }}
-                        </span>
-                      </li>
-                    </ul>
-                    <div
-                      v-if="updatedPrice"
-                      class="order-totals__price font--text font-weight-medium"
+                          <component
+                            :currentStep="currentStep"
+                            :fields="fields"
+                            :updateOptions="updateOptions"
+                            :price="price"
+                            :updatePrice="updatePrice"
+                            :is="getStepComponent(step.id)"
+                            v-if="step.id == currentStep"
+                          ></component>
+                        </v-stepper-content>
+                      </v-form>
+                    </v-stepper-items>
+
+                    <v-col
+                      class="
+                        order-page__total
+                        col-12 col-sm-4
+                        pa-4
+                        pr-sm-0
+                        pt-md-8
+                        pl-md-8
+                      "
                     >
-                      Цена:&nbsp;
-                      <span class="price-value font-weight-regular">
-                        {{ updatedPrice }}
-                      </span>
-                    </div>
-                    <v-btn
-                      class="order-totals__button mt-8"
-                      color="primary"
-                      :disabled="!valid"
-                      elevation="0"
-                      form="order_form"
-                      type="submit"
-                      @click="showDialog()"
-                      >{{ actionName }}
-                    </v-btn>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-stepper>
-          </ValidationObserver>
-        </v-container>
-      </div>
-      <v-dialog
-        v-model="dialog"
-        overlay-color="white"
-        overlay-opacity="0.9"
-        :persistent="isRequesting"
-      >
-        <div
-          v-if="!isRequesting"
-          class="
-            order-sumbit-dialog
-            d-flex
-            align-center
-            justify-center
-            flex-column
-          "
-        >
-          <v-subheader class="order-sumbit-dialog__subheader justify-center"
-            >Подтвердить заказ</v-subheader
-          >
-          <div class="order-sumbit-dialog__buttons mt-6">
-            <v-btn color="primary" elevation="0" @click="setOrderDetails()">
-              Подтвердить
-            </v-btn>
-            <v-btn color="secondary" elevation="0" @click="dialog = false">
-              Вернуться
-            </v-btn>
+                      <div class="order-totals">
+                        <div
+                          class="
+                            order-totals__header
+                            text-right
+                            font--text font-weight-medium
+                          "
+                        >
+                          Ваш заказ:
+                        </div>
+                        <ul class="order-totals__options my-8">
+                          <li
+                            v-for="option in options"
+                            :key="option.id"
+                            class="
+                              order-totals__options-item
+                              d-flex
+                              justify-space-between
+                              align-end
+                            "
+                          >
+                            <span
+                              class="option-name font--text font-weight-light"
+                              >{{ option.name }}</span
+                            >
+                            <span class="option-divider"></span>
+                            <span
+                              class="
+                                option-value
+                                tertiary--text
+                                font-weight-light
+                              "
+                            >
+                              {{ option.value }}
+                            </span>
+                          </li>
+                        </ul>
+                        <div
+                          v-if="updatedPrice"
+                          class="
+                            order-totals__price
+                            font--text font-weight-medium
+                          "
+                        >
+                          Цена:&nbsp;
+                          <span class="price-value font-weight-regular">
+                            {{ updatedPrice }}
+                          </span>
+                        </div>
+                        <v-btn
+                          class="order-totals__button mt-8"
+                          color="primary"
+                          :disabled="!valid"
+                          elevation="0"
+                          form="order_form"
+                          type="submit"
+                          @click="showDialog()"
+                          >{{ actionName }}
+                        </v-btn>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-stepper>
+              </ValidationObserver>
+            </v-container>
           </div>
-        </div>
-        <div
-          v-else
-          class="
-            order-sumbit-dialog
-            d-flex
-            align-center
-            justify-center
-            flex-column
-            pa-4
-          "
-        >
-          <v-progress-circular indeterminate color="primary"></v-progress-circular>
-        </div>
-      </v-dialog>
-    </v-col>
-  </v-row>
+          <v-dialog
+            v-model="dialog"
+            overlay-color="white"
+            overlay-opacity="0.9"
+            :persistent="isRequesting"
+          >
+            <div
+              v-if="!isRequesting"
+              class="
+                order-sumbit-dialog
+                d-flex
+                align-center
+                justify-center
+                flex-column
+              "
+            >
+              <v-subheader class="order-sumbit-dialog__subheader justify-center"
+                >Подтвердить заказ</v-subheader
+              >
+              <div class="order-sumbit-dialog__buttons mt-6">
+                <v-btn color="primary" elevation="0" @click="setOrderDetails()">
+                  Подтвердить
+                </v-btn>
+                <v-btn color="secondary" elevation="0" @click="dialog = false">
+                  Вернуться
+                </v-btn>
+              </div>
+            </div>
+            <div
+              v-else
+              class="
+                order-sumbit-dialog
+                d-flex
+                align-center
+                justify-center
+                flex-column
+                pa-4
+              "
+            >
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </div>
+          </v-dialog>
+        </v-col>
+      </v-row>
+    </v-main>
+  </div>
 </template>
 
 <script>
 import MainService from "@/service/MainService.js";
+import NavigationComponent from "@/components/NavigationComponent";
 import HeaderComponent from "@/components/HeaderComponent";
 import FooterComponent from "@/components/FooterComponent";
 import StepOne from "@/components/orders/StepOne";
@@ -187,6 +203,7 @@ import StepFour from "@/components/orders/StepFour";
 export default {
   name: "Order",
   components: {
+    NavigationComponent,
     HeaderComponent,
     FooterComponent,
     StepOne,
@@ -371,7 +388,7 @@ export default {
           (status) => status.name === newStatusName
         );
 
-        this.isRequesting = true
+        this.isRequesting = true;
 
         if (orderStatus) {
           orderData = { ...orderData, orderStatusId: orderStatus };
@@ -379,19 +396,18 @@ export default {
 
         const newOrderData = await MainService.addOrder(orderData);
 
-        if(newOrderData) {
+        if (newOrderData) {
           this.$router.push({
-              name: 'OrderDetails',
-              params: {
-                  id: newOrderData.id, 
-              }
+            name: "OrderDetails",
+            params: {
+              id: newOrderData.id,
+            },
           });
         }
-        
       } catch (error) {
         console.log(error);
       } finally {
-        this.isRequesting = false
+        this.isRequesting = false;
       }
     },
   },

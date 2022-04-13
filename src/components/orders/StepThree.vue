@@ -92,22 +92,22 @@
       <v-checkbox
         v-model="stepFields.isFullTank.value"
         label="Полный бак, 500р"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        on-icon="$vuetify.icon.checkboxBaseOn"
+        off-icon="$vuetify.icon.checkboxBaseOff"
         @change="updateAdditionalOption('isFullTank', 500)"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isNeedChildChair.value"
         label="Детское кресло, 200р"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        on-icon="$vuetify.icon.checkboxBaseOn"
+        off-icon="$vuetify.icon.checkboxBaseOff"
         @change="updateAdditionalOption('isNeedChildChair', 200)"
       ></v-checkbox>
       <v-checkbox
         v-model="stepFields.isRightWheel.value"
         label="Правый руль, 1600р"
-        on-icon="$vuetify.icon.checkboxOn"
-        off-icon="$vuetify.icon.checkboxOff"
+        on-icon="$vuetify.icon.checkboxBaseOn"
+        off-icon="$vuetify.icon.checkboxBaseOff"
         @change="updateAdditionalOption('isRightWheel', 1600)"
       ></v-checkbox>
     </div>
