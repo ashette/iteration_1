@@ -33,14 +33,11 @@
   </v-main>
 </template>
 
-<style lang="scss">
-@import "@/scss/admin.scss";
-</style>
 
 <script>
 export default {
   data: () => ({
-    logo: require("@/assets/logo.png"),
+    logo: require("@/assets/logo.svg"),
   }),
 };
 </script>

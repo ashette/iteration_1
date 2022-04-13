@@ -80,9 +80,16 @@
     background-color: map-get($shades, "black");
   }
 
-  .v-main .theme--light & {
+  &.v-btn--text {
     color: var(--v-tertiary-base);
 
+    .v-icon {
+      color: currentColor;
+      fill: currentColor;
+    }
+  }
+
+  .v-main .theme--light {
     .v-icon {
       color: currentColor;
       fill: currentColor;
@@ -166,7 +173,7 @@
 }
 
 .v-main {
-  .v-toolbar {
+  &:not(.admin) .v-toolbar {
     &__content {
       padding: 0;
       height: auto !important;
@@ -192,7 +199,7 @@
 }
 
 .v-menu {
-  &__content {
+  &__content.v-autocomplete__content {
     border: 1px solid var(--v-disabled-base);
     max-height: 106px !important;
 
