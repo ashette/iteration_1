@@ -274,11 +274,13 @@ $admin-font: "Helvetica", sans-serif;
 
             .v-btn.v-size--default {
                 max-height: 24px;
+                min-width: unset;
                 border: 1px solid var(--v-admin-border-base);
-                font-size: 12px;
-                padding: 0 8px;
+                font-size: 11px;
+                padding: 0 6px;
                 background-color: inherit;
-                color: var(--v-admin-font-darken1);
+                color: var(--v-font-base);
+                opacity: 1;
             }
 
             .v-btn:first-child {
@@ -632,7 +634,8 @@ $admin-font: "Helvetica", sans-serif;
 }
 
 .order-image {
-    min-width: 180px;
+    min-width: 150px;
+    padding: 12px 0;
 }
 
 .order-info {
@@ -652,6 +655,10 @@ $admin-font: "Helvetica", sans-serif;
 
 .order-options {
     min-width: 150px;
+}
+
+.order-controls {
+    padding: 12px 0;
 }
 
 @media #{map-get($display-breakpoints, 'sm-only')} {

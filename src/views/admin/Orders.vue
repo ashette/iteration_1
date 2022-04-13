@@ -60,7 +60,7 @@
           <v-col class="table-col order-price" cols="2">
             <span>{{ order.price }} <span class="price-currency">₽</span></span>
           </v-col>
-          <v-col class="text-right">
+          <v-col class="table-col order-controls text-right">
             <ControlButtons />
           </v-col>
         </v-row>
