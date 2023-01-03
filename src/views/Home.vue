@@ -13,6 +13,7 @@
               Поминутная аренда авто твоего города
             </div>
             <v-btn
+              to="/order"
               class="btn-reserve mt-8 mt-sm-15 px-15"
               color="primary"
               elevation="0"
